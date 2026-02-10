@@ -45,9 +45,31 @@
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(ellipse 70% 50% at 50% 40%, rgba(10,10,12,0.5) 0%, rgba(10,10,12,0.85) 100%),
-                linear-gradient(to bottom, rgba(10,10,12,0.3) 0%, rgba(10,10,12,0.6) 60%, rgba(10,10,12,0.95) 100%);
-}
+                radial-gradient(ellipse 60% 50% at 50% 45%, rgba(10,10,12,0.4) 0%, rgba(10,10,12,0.92) 100%),
+                linear-gradient(to bottom, rgba(10,10,12,0.5) 0%, rgba(10,10,12,0.7) 50%, rgba(10,10,12,0.98) 100%),
+                linear-gradient(to top, rgba(10,10,12,0.95) 0%, transparent 30%),
+                linear-gradient(to left, rgba(10,10,12,0.7) 0%, transparent 20%),
+                linear-gradient(to right, rgba(10,10,12,0.7) 0%, transparent 20%);
+        }
+
+        .backdrop-glow {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,106,0,0.07) 0%, rgba(255,106,0,0.02) 40%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .backdrop-noise {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
 
         /* ===== PAGE ===== */
         .page {
@@ -66,22 +88,6 @@
             margin-bottom: 1.5rem;
             animation: fadeIn 1s ease forwards;
             opacity: 0;
-        }
-
-        .logo-placeholder {
-            width: 140px;
-            height: 140px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 3.5rem;
-            color: var(--dark);
-            box-shadow:
-                0 0 60px rgba(255,106,0,0.2),
-                0 0 120px rgba(255,106,0,0.08);
         }
 
         .logo-img {
@@ -297,10 +303,9 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 500px) {
-            .logo-placeholder, .logo-img {
+            .logo-img {
                 width: 110px;
                 height: 110px;
-                font-size: 2.8rem;
                 border-radius: 16px;
             }
 
@@ -329,7 +334,6 @@
 
     <main class="page">
 
-        <!-- LOGO: Replace the div below with <img src="logo.png" alt="Alliance UHC" class="logo-img"> -->
         <div class="logo-container">
             <img src="logo.png" alt="Alliance UHC" class="logo-img">
         </div>
@@ -360,7 +364,7 @@
 
         <p class="info">
             No natural regeneration. Battle royale minecraft server.<br>
-            Custom scenarios, 1.8 Combat&amp; an active community.<br>
+            Custom scenarios, 1.8 Combat &amp; an active community.<br>
             Join the Discord to find matches.
         </p>
 
