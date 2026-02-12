@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scenarios — Alliance UHC</title>
+    <meta name="description" content="Browse all custom UHC scenarios available on Alliance UHC. Learn the rules before you play.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Scenarios — Alliance UHC">
+    <meta property="og:description" content="Browse all custom UHC scenarios. CutClean, Timebomb, Barebones and 60+ more game-changing modes.">
+    <meta property="og:image" content="https://site.allianceuhc.space/logo.png">
+    <meta property="og:url" content="https://site.allianceuhc.space/scenarios.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Alliance UHC">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Scenarios — Alliance UHC">
+    <meta name="twitter:description" content="Browse all custom UHC scenarios. CutClean, Timebomb, Barebones and 60+ more game-changing modes.">
+    <meta name="twitter:image" content="https://site.allianceuhc.space/logo.png">
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#FF6A00">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fire-orange: #FF6A00;
+            --fire-yellow: #FFB800;
+            --ember: #FF4500;
+            --gold: #FFC940;
+            --dark: #0A0A0C;
+            --dark-surface: #111115;
+            --dark-card: #16161B;
+            --dark-border: #222228;
+            --text-primary: #F0EDE6;
+            --text-muted: #8A8694;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .ambient {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 50% 30% at 20% 10%, rgba(255,106,0,0.04) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 90%, rgba(255,69,0,0.03) 0%, transparent 70%);
+        }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 12, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,106,0,0.08);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .nav-logo { height: 32px; width: 32px; border-radius: 6px; }
+
+        .nav-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-back {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .nav-back:hover { color: var(--fire-orange); }
+
+        .header {
+            padding: 7rem 2rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .header-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--fire-orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .header h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            letter-spacing: 4px;
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+
+        .header h1 span {
+            background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            max-width: 1100px;
+            margin: 1.5rem auto 0;
+            padding: 0 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            animation: fadeInUp 0.6s ease 0.1s forwards;
+            opacity: 0;
+        }
+
+        .search-bar { position: relative; }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar input::placeholder { color: var(--text-muted); }
+        .search-bar input:focus { border-color: var(--fire-orange); }
+
+        .search-icon {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .filter-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+        .filter-btn {
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            border: 1px solid var(--dark-border);
+            background: var(--dark-card);
+            color: var(--text-muted);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-btn:hover { border-color: rgba(255,106,0,0.3); color: var(--text-primary); }
+
+        .filter-btn.active {
+            background: rgba(255,106,0,0.12);
+            border-color: var(--fire-orange);
+            color: var(--fire-orange);
+        }
+
+        .result-count {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            padding: 0 0.25rem;
+        }
+
+        .scenarios {
+            max-width: 1100px;
+            margin: 1.5rem auto 3rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 0.75rem;
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .scenario-card {
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: all 0.3s;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scenario-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--fire-orange), var(--fire-yellow));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: rgba(255,106,0,0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+        }
+
+        .scenario-card:hover::before { opacity: 1; }
+
+        .scenario-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .scenario-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+        }
+
+        .scenario-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .tag-pvp { background: rgba(255,69,0,0.12); color: #FF6A5E; }
+        .tag-mining { background: rgba(0,180,216,0.1); color: #48CAE4; }
+        .tag-survival { background: rgba(76,175,80,0.1); color: #81C784; }
+        .tag-teams { background: rgba(156,39,176,0.1); color: #CE93D8; }
+        .tag-movement { background: rgba(255,184,0,0.1); color: var(--fire-yellow); }
+        .tag-loot { background: rgba(255,152,0,0.1); color: #FFB74D; }
+        .tag-world { background: rgba(33,150,243,0.1); color: #64B5F6; }
+        .tag-mobs { background: rgba(244,67,54,0.1); color: #E57373; }
+        .tag-misc { background: rgba(158,158,158,0.1); color: #BDBDBD; }
+
+        .scenario-desc {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            line-height: 1.55;
+            font-weight: 400;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .no-results h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        footer {
+            border-top: 1px solid var(--dark-border);
+            padding: 2rem;
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copy { font-size: 0.7rem; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
+
+        .footer-home {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .footer-home:hover { color: var(--fire-orange); }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 700px) {
+            .scenarios { grid-template-columns: 1fr; }
+            .footer-inner { flex-direction: column; gap: 0.75rem; }
+        }
+
+        @media (max-width: 500px) {
+            nav { padding: 0.7rem 1.25rem; }
+            .header { padding: 6rem 1.25rem 1.5rem; }
+            .controls { padding: 0 1.25rem; }
+            .scenarios { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient"></div>
+
+    <nav>
+        <a href="index.html" class="nav-left">
+            <img src="logo.png" alt="Alliance UHC" class="nav-logo">
+            <span class="nav-title">Alliance UHC</span>
+        </a>
+        <a href="index.html" class="nav-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Home
+        </a>
+    </nav>
+
+    <div class="header">
+        <div class="header-label">// Game Modes</div>
+        <h1><span>Scenarios</span></h1>
+        <p>Custom rules that change how each match plays. Learn them before you drop in.</p>
+    </div>
+
+    <div class="controls">
+        <div class="search-bar">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="search" placeholder="Search scenarios..." autocomplete="off">
+        </div>
+        <div class="filter-row" id="filters">
+            <button class="filter-btn active" data-cat="all">All</button>
+            <button class="filter-btn" data-cat="pvp">PvP</button>
+            <button class="filter-btn" data-cat="mining">Mining</button>
+            <button class="filter-btn" data-cat="survival">Survival</button>
+            <button class="filter-btn" data-cat="teams">Teams</button>
+            <button class="filter-btn" data-cat="movement">Movement</button>
+            <button class="filter-btn" data-cat="loot">Loot</button>
+            <button class="filter-btn" data-cat="world">World</button>
+            <button class="filter-btn" data-cat="mobs">Mobs</button>
+            <button class="filter-btn" data-cat="misc">Misc</button>
+        </div>
+        <div class="result-count" id="resultCount"></div>
+    </div>
+
+    <div class="scenarios" id="scenarioGrid"></div>
+
+    <footer>
+        <div class="footer-inner">
+            <a href="index.html" class="footer-home">← Back to Home</a>
+            <div class="footer-copy">&copy; 2026 Alliance UHC &middot; Not affiliated with Mojang Studios</div>
+        </div>
+    </footer>
+
+    <script>
+        const scenarios = [
+            { name: "Alone Together", cat: "teams", desc: "You cannot see your teammates. You can't melee damage your teammates but you can still hit them with projectiles." },
+            { name: "Armor Compensation", cat: "teams", desc: "Team of 5's or higher can't wear any diamond armor. For every team size lower than 5, each team member can wear an extra piece of diamond armor." },
+            { name: "Avengers", cat: "pvp", desc: "Each player will gain an extra ability or items based on the Avengers: Iron Man, Quicksilver, Thor, Spider Man, Captain America or Hulk." },
+            { name: "Balance", cat: "mining", desc: "After you mine your 5th diamond, there is a chance your diamond will not drop from diamond ore. This chance increases as you mine more diamonds." },
+            { name: "Barebones", cat: "survival", desc: "Nether is disabled. You cannot craft enchantment tables, anvils or golden apples. Iron is the highest tier. Mining any ore except coal and iron drops an iron ingot. Players drop 1 diamond, 1 golden apple, 32 arrows and 2 strings on death." },
+            { name: "Best PvE", cat: "survival", desc: "Players start on a \"Best PvE\" list and gain 1 extra heart every 10 minutes. Taking damage removes you from the list. Getting a kill adds you back." },
+            { name: "Bigcrack", cat: "world", desc: "There is a wide crack through the x-axis of the map." },
+            { name: "Blast Mining", cat: "mining", desc: "When mining any ore, there is a 5% chance a creeper spawns (given slowness for 2s) and a 3% chance an ignited TNT spawns. These never happen simultaneously." },
+            { name: "Bleeding Sweets", cat: "loot", desc: "Players drop 1 diamond, 7 gold, 1 book, 2 string and 24 arrows on death." },
+            { name: "Blood Diamonds", cat: "mining", desc: "Each time you mine diamond ore, you lose half a heart." },
+            { name: "Blood Diamonds+", cat: "mining", desc: "Each time you mine a diamond you take damage, and you progressively lose more health the more you mine." },
+            { name: "Bowfighters", cat: "pvp", desc: "Everyone is given 1 arrow, 2 string and an Infinity book. The highest tier of melee weapon you can get is wood sword/stone axe." },
+            { name: "Bowless", cat: "pvp", desc: "You can't craft or use bows." },
+            { name: "Bridge Eggs", cat: "movement", desc: "When you shoot an egg, it spawns a trail of blocks for you to walk on (3s cooldown). Chickens have a 30% chance of dropping an egg." },
+            { name: "Children Left Unattended", cat: "teams", desc: "When your teammate dies, the remaining player receives Speed 2 (30s) and a tamed wolf." },
+            { name: "Craftclean", cat: "mining", desc: "Surround a piece of coal with 8 smeltable items in a crafting bench to get 8 of the smelted result." },
+            { name: "Cripple", cat: "movement", desc: "When you take fall damage you get Slowness 2 for 30 seconds." },
+            { name: "Cupid", cat: "pvp", desc: "When you hit a player with a bow you gain 1% of your health back." },
+            { name: "Custom 0/0", cat: "misc", desc: "The meetup location at 0/0 is changed to the host's chosen coordinates." },
+            { name: "CutClean", cat: "mining", desc: "All ores and food drop their smelted variant." },
+            { name: "Depths", cat: "mobs", desc: "As you go farther down the Y level, mobs will deal more damage." },
+            { name: "Dependency", cat: "teams", desc: "You cannot craft a crafting table. The only way to access one is to right click one of your teammates." },
+            { name: "Dolphins", cat: "movement", desc: "Whenever a player is in water, they will propel forwards and 'Dolphin dive' when sneaking." },
+            { name: "DiamondLess", cat: "mining", desc: "Diamonds do not drop from ore. Instead players drop 1 diamond on death." },
+            { name: "Go To Hell", cat: "survival", desc: "After 45 minutes, you must go to the nether. If not, you will take half a heart every 30 seconds." },
+            { name: "Golden Heights", cat: "world", desc: "Sea level reduced to Y24 with floating islands. Gold, Lapis, Redstone spawn in the sky while diamonds spawn at their usual level." },
+            { name: "Golden Retriever", cat: "loot", desc: "When a player dies, instead of a player head dropping, a golden head is dropped." },
+            { name: "Grave Robbers", cat: "loot", desc: "When a player is killed, a gravestone spawns with their name on it. You must dig up the grave to get the player's loot." },
+            { name: "HasteyBoys", cat: "mining", desc: "All tools are equipped with Efficiency 3 and Unbreaking 1." },
+            { name: "HasteyBabies", cat: "mining", desc: "All tools are equipped with Efficiency 1." },
+            { name: "Infestation", cat: "mobs", desc: "Every mob has a 40% chance of respawning when killed." },
+            { name: "Infinite Allies", cat: "teams", desc: "You can ally with whoever you want, however many you want, but only 1 player can win." },
+            { name: "Investments", cat: "pvp", desc: "You can invest diamonds or gold on a player. If that player gets a kill, you get double back. When they die, they drop your invested amount. Use /invest." },
+            { name: "Krenzinator", cat: "misc", desc: "No horses, nether is off, eggs deal 0.5 hearts, crafting a diamond sword costs 1 heart, and you can craft 1 diamond from 9 redstone blocks." },
+            { name: "Midas", cat: "pvp", desc: "You get gold based on how many times you hit a player before killing them." },
+            { name: "Monsters Inc", cat: "movement", desc: "Place a door on the map, walk through it, and if there are 2+ doors on the map, you'll be teleported to one of them." },
+            { name: "Mystery Teams", cat: "teams", desc: "Your team is unknown to you. You must find your teammates using wools dyed in your team color." },
+            { name: "Naked And Afraid", cat: "pvp", desc: "You cannot see the armour other enemy players are wearing." },
+            { name: "Nightmare Mode", cat: "mobs", desc: "All mobs are dramatically enhanced. Creepers stalk faster and spawn larvae. Skeletons fire poison arrows. Zombies survive in sunlight and reanimate as skeletons. Spiders are faster and spray webs on death. Endermen ignite players and can summon blazes. Witches approach silently at terrifying speed." },
+            { name: "No Anvils", cat: "survival", desc: "You cannot use anvils." },
+            { name: "No Diamond Armor", cat: "survival", desc: "Diamond armor is not craftable." },
+            { name: "No Enchant Preview", cat: "survival", desc: "You cannot see the preview when hovering over enchantments in the enchant inventory." },
+            { name: "No Fall", cat: "movement", desc: "You cannot take fall damage." },
+            { name: "Paper", cat: "pvp", desc: "Everyone takes 4 times as much horizontal knockback." },
+            { name: "Parafusion", cat: "misc", desc: "Your coordinates are broadcast in chat when you mine gold/diamond, go to the nether, craft a brewing stand or golden apple, and when you die." },
+            { name: "Permakill", cat: "misc", desc: "When somebody dies in game, day changes to night, or night changes to day." },
+            { name: "Potential 0/0", cat: "misc", desc: "The meetup coordinates are unknown. 3 potential meetup coordinates can be viewed using /potcoords. The real one is revealed when meetup starts." },
+            { name: "Progressive Speed", cat: "movement", desc: "Everyone starts with Speed 1. Each kill increases your speed tier by 1." },
+            { name: "Quad Anvils", cat: "survival", desc: "At +/- 250 there is an anvil that can be used. Anvils cannot be broken by hand but can still get damaged. Crafting anvils is disabled." },
+            { name: "Radar", cat: "pvp", desc: "Clicking a clock shows the name, distance and health of players within 120 blocks. Usable once per 5 seconds." },
+            { name: "Red Arrows", cat: "pvp", desc: "When a player dies, a red arrow spawns above them." },
+            { name: "Refill", cat: "loot", desc: "Players drop extra gold on death. The amount increases the lower the killer's health is. In team games, it's based on the team's average health." },
+            { name: "Rodless", cat: "pvp", desc: "You cannot use fishing rods to hit players. You can still use them to fish as usual." },
+            { name: "Rush", cat: "misc", desc: "Short game, under 45 minutes. Wooden tools automatically turn into stone tools." },
+            { name: "SandBags", cat: "pvp", desc: "Arrows break blocks in a 2x2 radius except for sand and gravel." },
+            { name: "Signals", cat: "misc", desc: "A surface firework with a correlated color spawns when a player mines diamonds/gold, goes to the nether, or crafts an enchantment table or golden apples." },
+            { name: "Skyhigh", cat: "survival", desc: "At PvP, you take damage every 30 seconds if you are below Y:120." },
+            { name: "Skyhigh Nether", cat: "survival", desc: "At Meetup, you take damage every 30 seconds below Y:170. The nether roof is removed. You get skyhigh items and 10 obsidian on start." },
+            { name: "Speedy Miners", cat: "movement", desc: "Players below Y:32 receive Speed 1." },
+            { name: "Split Spawn", cat: "teams", desc: "All players are scattered solo, regardless of their team." },
+            { name: "Sugar Rush", cat: "movement", desc: "Right-clicking sugar gives you Speed 2 for 8 seconds." },
+            { name: "Superheroes", cat: "pvp", desc: "Each player gains a random power: Speed 2 + Haste 1; Jump 4 + Haste 2 + Saturation 10; Resistance 2 + Fire Resistance; or Health Boost (20 hearts) with extra healing from gapples/heads. Jump Boost power negates fall damage." },
+            { name: "Superflat Villages", cat: "world", desc: "Villages generate much more often, similar to superflat worlds." },
+            { name: "Switcheroo", cat: "pvp", desc: "When you shoot someone, you trade places with them." },
+            { name: "Team Inventory", cat: "teams", desc: "Teams share an extra inventory via /ti that all teammates can access. If the last player dies, the Team Inventory loot drops." },
+            { name: "Timber", cat: "mining", desc: "Breaking a log of a tree will cause the whole tree to fall down." },
+            { name: "Timebomb", cat: "loot", desc: "After killing a player, their loot drops into a chest. 30 seconds later, the chest explodes." },
+            { name: "Training Rabbits", cat: "movement", desc: "Everyone gets Jump Boost 2 for the whole game. As you get kills, your jump level increases by 1 tier. Fall damage is disabled." },
+            { name: "Underground Parallel", cat: "world", desc: "Below Y42 is a copy of the surface. Trees underground are made of ores, stone and sea lanterns. Mineshafts generate floating below Y42." },
+            { name: "Unstable Mining", cat: "mining", desc: "When mining under Y40 there are chances of methane explosions, floods and unstable cave ceilings." },
+            { name: "WebCage", cat: "pvp", desc: "A giant cobweb sphere appears where a player dies." },
+        ];
+
+        const grid = document.getElementById('scenarioGrid');
+        const searchInput = document.getElementById('search');
+        const resultCount = document.getElementById('resultCount');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        let activeFilter = 'all';
+
+        const tagLabels = {
+            pvp: 'PvP', mining: 'Mining', survival: 'Survival', teams: 'Teams',
+            movement: 'Movement', loot: 'Loot', world: 'World', mobs: 'Mobs', misc: 'Misc'
+        };
+
+        function renderScenarios() {
+            const query = searchInput.value.toLowerCase().trim();
+            const filtered = scenarios.filter(s => {
+                const matchesCat = activeFilter === 'all' || s.cat === activeFilter;
+                const matchesSearch = !query || s.name.toLowerCase().includes(query) || s.desc.toLowerCase().includes(query);
+                return matchesCat && matchesSearch;
+            });
+
+            resultCount.textContent = `${filtered.length} scenario${filtered.length !== 1 ? 's' : ''} found`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="no-results"><h3>No scenarios found</h3><p>Try a different search or filter.</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(s => `
+                <div class="scenario-card">
+                    <div class="scenario-top">
+                        <div class="scenario-name">${s.name}</div>
+                        <span class="scenario-tag tag-${s.cat}">${tagLabels[s.cat]}</span>
+                    </div>
+                    <div class="scenario-desc">${s.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        searchInput.addEventListener('input', renderScenarios);
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.dataset.cat;
+                renderScenarios();
+            });
+        });
+        renderScenarios();
+    </script>
+</body>
+</html>

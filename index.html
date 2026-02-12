@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alliance UHC</title>
     <meta name="description" content="Alliance UHC is a Minecraft Ultra Hardcore server. Offering custom UHC matches and practice.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Alliance UHC — Ultra Hardcore Minecraft">
+    <meta property="og:description" content="Competitive Minecraft UHC server. No natural regeneration. Custom scenarios, 1.8 combat & an active community.">
+    <meta property="og:image" content="https://site.allianceuhc.space/logo.png">
+    <meta property="og:url" content="https://site.allianceuhc.space/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Alliance UHC">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Alliance UHC — Ultra Hardcore Minecraft">
+    <meta name="twitter:description" content="Competitive Minecraft UHC server. No natural regeneration. Custom scenarios, 1.8 combat & an active community.">
+    <meta name="twitter:image" content="https://site.allianceuhc.space/logo.png">
+
+    <!-- Theme color (browser tab / mobile address bar) -->
+    <meta name="theme-color" content="#FF6A00">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -15,6 +37,10 @@
             --ember: #FF4500;
             --gold: #FFC940;
             --dark: #0A0A0C;
+            --dark-card: #16161B;
+            --dark-border: #222228;
+            --text-primary: #F0EDE6;
+            --text-muted: #8A8694;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,12 +49,11 @@
         body {
             font-family: 'Rajdhani', sans-serif;
             background: var(--dark);
-            color: #F0EDE6;
+            color: var(--text-primary);
             overflow-x: hidden;
             min-height: 100vh;
         }
 
-        /* ===== FULLSCREEN BACKDROP ===== */
         .backdrop {
             position: fixed;
             inset: 0;
@@ -71,7 +96,111 @@
             pointer-events: none;
         }
 
-        /* ===== PAGE ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 0.7rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 12, 0.6);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,106,0,0.08);
+            transition: all 0.3s;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 12, 0.92);
+            padding: 0.55rem 2rem;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            height: 30px;
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        .nav-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.75rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: linear-gradient(90deg, var(--fire-orange), var(--fire-yellow));
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-discord {
+            background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow)) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            font-weight: 700 !important;
+        }
+
+        .nav-discord::after { display: none !important; }
+        .nav-discord:hover { opacity: 0.8; }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .mobile-toggle span {
+            width: 22px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s;
+            display: block;
+        }
+
         .page {
             position: relative;
             z-index: 1;
@@ -83,7 +212,6 @@
             padding: 2rem;
         }
 
-        /* ===== LOGO ===== */
         .logo-container {
             margin-bottom: 1.5rem;
             animation: fadeIn 1s ease forwards;
@@ -99,7 +227,6 @@
                 0 0 120px rgba(255,106,0,0.08);
         }
 
-        /* ===== TITLE ===== */
         .title {
             font-family: 'Bebas Neue', sans-serif;
             font-size: clamp(3rem, 8vw, 5.5rem);
@@ -130,7 +257,6 @@
             opacity: 0;
         }
 
-        /* ===== IP BLOCK ===== */
         .ip-block {
             display: flex;
             align-items: center;
@@ -181,7 +307,6 @@
             background: rgba(255,106,0,0.1);
         }
 
-        /* ===== BUTTONS ===== */
         .actions {
             display: flex;
             gap: 0.75rem;
@@ -233,7 +358,6 @@
             transform: translateY(-2px);
         }
 
-        /* ===== DIVIDER ===== */
         .divider {
             width: 60px;
             height: 2px;
@@ -243,7 +367,6 @@
             opacity: 0;
         }
 
-        /* ===== INFO ===== */
         .info {
             text-align: center;
             max-width: 460px;
@@ -254,7 +377,6 @@
             opacity: 0;
         }
 
-        /* ===== FOOTER ===== */
         .footer {
             position: absolute;
             bottom: 1.25rem;
@@ -267,7 +389,6 @@
             z-index: 1;
         }
 
-        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 2rem;
@@ -290,7 +411,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* ===== ANIMATIONS ===== */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -301,8 +421,24 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 500px) {
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background: rgba(10, 10, 12, 0.97);
+                backdrop-filter: blur(20px);
+                padding: 1.25rem 2rem;
+                gap: 1rem;
+                border-bottom: 1px solid var(--dark-border);
+            }
+
+            .nav-links.open { display: flex; }
+            .mobile-toggle { display: flex; }
+
             .logo-img {
                 width: 110px;
                 height: 110px;
@@ -317,7 +453,6 @@
             }
 
             .ip-copy-hint { display: none; }
-
             .actions { flex-direction: column; align-items: center; }
             .btn { width: 100%; justify-content: center; max-width: 260px; }
         }
@@ -332,8 +467,23 @@
         <div class="backdrop-noise"></div>
     </div>
 
-    <main class="page">
+    <nav id="navbar">
+        <a href="index.html" class="nav-left">
+            <img src="logo.png" alt="Alliance UHC" class="nav-logo">
+            <span class="nav-title">Alliance UHC</span>
+        </a>
+        <button class="mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="scenarios.html">Scenarios</a></li>
+            <li><a href="staff.html">Staff</a></li>
+            <li><a href="status.html">Status</a></li>
+            <li><a href="https://discord.allianceuhc.space" target="_blank" class="nav-discord">Discord</a></li>
+        </ul>
+    </nav>
 
+    <main class="page">
         <div class="logo-container">
             <img src="logo.png" alt="Alliance UHC" class="logo-img">
         </div>
@@ -367,11 +517,9 @@
             Custom scenarios, 1.8 Combat &amp; an active community.<br>
             Join the Discord to find matches.
         </p>
-
     </main>
 
     <div class="footer">&copy; 2026 Alliance UHC &middot; Not affiliated with Mojang Studios</div>
-
     <div class="toast" id="toast">✓ Copied to clipboard</div>
 
     <script>
@@ -382,6 +530,14 @@
                 setTimeout(() => t.classList.remove('show'), 2200);
             });
         }
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+        });
+        document.querySelectorAll('.nav-links a').forEach(a => {
+            a.addEventListener('click', () => {
+                document.querySelector('.nav-links').classList.remove('open');
+            });
+        });
     </script>
 </body>
 </html>
