@@ -422,85 +422,12 @@
     </footer>
 
     <script>
-        const scenarios = [
-            { name: "Alone Together", cat: "teams", desc: "You cannot see your teammates. You can't melee damage your teammates but you can still hit them with projectiles." },
-            { name: "Armor Compensation", cat: "teams", desc: "Team of 5's or higher can't wear any diamond armor. For every team size lower than 5, each team member can wear an extra piece of diamond armor." },
-            { name: "Avengers", cat: "pvp", desc: "Each player will gain an extra ability or items based on the Avengers: Iron Man, Quicksilver, Thor, Spider Man, Captain America or Hulk." },
-            { name: "Balance", cat: "mining", desc: "After you mine your 5th diamond, there is a chance your diamond will not drop from diamond ore. This chance increases as you mine more diamonds." },
-            { name: "Barebones", cat: "survival", desc: "Nether is disabled. You cannot craft enchantment tables, anvils or golden apples. Iron is the highest tier. Mining any ore except coal and iron drops an iron ingot. Players drop 1 diamond, 1 golden apple, 32 arrows and 2 strings on death." },
-            { name: "Best PvE", cat: "survival", desc: "Players start on a \"Best PvE\" list and gain 1 extra heart every 10 minutes. Taking damage removes you from the list. Getting a kill adds you back." },
-            { name: "Bigcrack", cat: "world", desc: "There is a wide crack through the x-axis of the map." },
-            { name: "Blast Mining", cat: "mining", desc: "When mining any ore, there is a 5% chance a creeper spawns (given slowness for 2s) and a 3% chance an ignited TNT spawns. These never happen simultaneously." },
-            { name: "Bleeding Sweets", cat: "loot", desc: "Players drop 1 diamond, 7 gold, 1 book, 2 string and 24 arrows on death." },
-            { name: "Blood Diamonds", cat: "mining", desc: "Each time you mine diamond ore, you lose half a heart." },
-            { name: "Blood Diamonds+", cat: "mining", desc: "Each time you mine a diamond you take damage, and you progressively lose more health the more you mine." },
-            { name: "Bowfighters", cat: "pvp", desc: "Everyone is given 1 arrow, 2 string and an Infinity book. The highest tier of melee weapon you can get is wood sword/stone axe." },
-            { name: "Bowless", cat: "pvp", desc: "You can't craft or use bows." },
-            { name: "Bridge Eggs", cat: "movement", desc: "When you shoot an egg, it spawns a trail of blocks for you to walk on (3s cooldown). Chickens have a 30% chance of dropping an egg." },
-            { name: "Children Left Unattended", cat: "teams", desc: "When your teammate dies, the remaining player receives Speed 2 (30s) and a tamed wolf." },
-            { name: "Craftclean", cat: "mining", desc: "Surround a piece of coal with 8 smeltable items in a crafting bench to get 8 of the smelted result." },
-            { name: "Cripple", cat: "movement", desc: "When you take fall damage you get Slowness 2 for 30 seconds." },
-            { name: "Cupid", cat: "pvp", desc: "When you hit a player with a bow you gain 1% of your health back." },
-            { name: "Custom 0/0", cat: "misc", desc: "The meetup location at 0/0 is changed to the host's chosen coordinates." },
-            { name: "CutClean", cat: "mining", desc: "All ores and food drop their smelted variant." },
-            { name: "Depths", cat: "mobs", desc: "As you go farther down the Y level, mobs will deal more damage." },
-            { name: "Dependency", cat: "teams", desc: "You cannot craft a crafting table. The only way to access one is to right click one of your teammates." },
-            { name: "Dolphins", cat: "movement", desc: "Whenever a player is in water, they will propel forwards and 'Dolphin dive' when sneaking." },
-            { name: "DiamondLess", cat: "mining", desc: "Diamonds do not drop from ore. Instead players drop 1 diamond on death." },
-            { name: "Go To Hell", cat: "survival", desc: "After 45 minutes, you must go to the nether. If not, you will take half a heart every 30 seconds." },
-            { name: "Golden Heights", cat: "world", desc: "Sea level reduced to Y24 with floating islands. Gold, Lapis, Redstone spawn in the sky while diamonds spawn at their usual level." },
-            { name: "Golden Retriever", cat: "loot", desc: "When a player dies, instead of a player head dropping, a golden head is dropped." },
-            { name: "Grave Robbers", cat: "loot", desc: "When a player is killed, a gravestone spawns with their name on it. You must dig up the grave to get the player's loot." },
-            { name: "HasteyBoys", cat: "mining", desc: "All tools are equipped with Efficiency 3 and Unbreaking 1." },
-            { name: "HasteyBabies", cat: "mining", desc: "All tools are equipped with Efficiency 1." },
-            { name: "Infestation", cat: "mobs", desc: "Every mob has a 40% chance of respawning when killed." },
-            { name: "Infinite Allies", cat: "teams", desc: "You can ally with whoever you want, however many you want, but only 1 player can win." },
-            { name: "Investments", cat: "pvp", desc: "You can invest diamonds or gold on a player. If that player gets a kill, you get double back. When they die, they drop your invested amount. Use /invest." },
-            { name: "Krenzinator", cat: "misc", desc: "No horses, nether is off, eggs deal 0.5 hearts, crafting a diamond sword costs 1 heart, and you can craft 1 diamond from 9 redstone blocks." },
-            { name: "Midas", cat: "pvp", desc: "You get gold based on how many times you hit a player before killing them." },
-            { name: "Monsters Inc", cat: "movement", desc: "Place a door on the map, walk through it, and if there are 2+ doors on the map, you'll be teleported to one of them." },
-            { name: "Mystery Teams", cat: "teams", desc: "Your team is unknown to you. You must find your teammates using wools dyed in your team color." },
-            { name: "Naked And Afraid", cat: "pvp", desc: "You cannot see the armour other enemy players are wearing." },
-            { name: "Nightmare Mode", cat: "mobs", desc: "All mobs are dramatically enhanced. Creepers stalk faster and spawn larvae. Skeletons fire poison arrows. Zombies survive in sunlight and reanimate as skeletons. Spiders are faster and spray webs on death. Endermen ignite players and can summon blazes. Witches approach silently at terrifying speed." },
-            { name: "No Anvils", cat: "survival", desc: "You cannot use anvils." },
-            { name: "No Diamond Armor", cat: "survival", desc: "Diamond armor is not craftable." },
-            { name: "No Enchant Preview", cat: "survival", desc: "You cannot see the preview when hovering over enchantments in the enchant inventory." },
-            { name: "No Fall", cat: "movement", desc: "You cannot take fall damage." },
-            { name: "Paper", cat: "pvp", desc: "Everyone takes 4 times as much horizontal knockback." },
-            { name: "Parafusion", cat: "misc", desc: "Your coordinates are broadcast in chat when you mine gold/diamond, go to the nether, craft a brewing stand or golden apple, and when you die." },
-            { name: "Permakill", cat: "misc", desc: "When somebody dies in game, day changes to night, or night changes to day." },
-            { name: "Potential 0/0", cat: "misc", desc: "The meetup coordinates are unknown. 3 potential meetup coordinates can be viewed using /potcoords. The real one is revealed when meetup starts." },
-            { name: "Progressive Speed", cat: "movement", desc: "Everyone starts with Speed 1. Each kill increases your speed tier by 1." },
-            { name: "Quad Anvils", cat: "survival", desc: "At +/- 250 there is an anvil that can be used. Anvils cannot be broken by hand but can still get damaged. Crafting anvils is disabled." },
-            { name: "Radar", cat: "pvp", desc: "Clicking a clock shows the name, distance and health of players within 120 blocks. Usable once per 5 seconds." },
-            { name: "Red Arrows", cat: "pvp", desc: "When a player dies, a red arrow spawns above them." },
-            { name: "Refill", cat: "loot", desc: "Players drop extra gold on death. The amount increases the lower the killer's health is. In team games, it's based on the team's average health." },
-            { name: "Rodless", cat: "pvp", desc: "You cannot use fishing rods to hit players. You can still use them to fish as usual." },
-            { name: "Rush", cat: "misc", desc: "Short game, under 45 minutes. Wooden tools automatically turn into stone tools." },
-            { name: "SandBags", cat: "pvp", desc: "Arrows break blocks in a 2x2 radius except for sand and gravel." },
-            { name: "Signals", cat: "misc", desc: "A surface firework with a correlated color spawns when a player mines diamonds/gold, goes to the nether, or crafts an enchantment table or golden apples." },
-            { name: "Skyhigh", cat: "survival", desc: "At PvP, you take damage every 30 seconds if you are below Y:120." },
-            { name: "Skyhigh Nether", cat: "survival", desc: "At Meetup, you take damage every 30 seconds below Y:170. The nether roof is removed. You get skyhigh items and 10 obsidian on start." },
-            { name: "Speedy Miners", cat: "movement", desc: "Players below Y:32 receive Speed 1." },
-            { name: "Split Spawn", cat: "teams", desc: "All players are scattered solo, regardless of their team." },
-            { name: "Sugar Rush", cat: "movement", desc: "Right-clicking sugar gives you Speed 2 for 8 seconds." },
-            { name: "Superheroes", cat: "pvp", desc: "Each player gains a random power: Speed 2 + Haste 1; Jump 4 + Haste 2 + Saturation 10; Resistance 2 + Fire Resistance; or Health Boost (20 hearts) with extra healing from gapples/heads. Jump Boost power negates fall damage." },
-            { name: "Superflat Villages", cat: "world", desc: "Villages generate much more often, similar to superflat worlds." },
-            { name: "Switcheroo", cat: "pvp", desc: "When you shoot someone, you trade places with them." },
-            { name: "Team Inventory", cat: "teams", desc: "Teams share an extra inventory via /ti that all teammates can access. If the last player dies, the Team Inventory loot drops." },
-            { name: "Timber", cat: "mining", desc: "Breaking a log of a tree will cause the whole tree to fall down." },
-            { name: "Timebomb", cat: "loot", desc: "After killing a player, their loot drops into a chest. 30 seconds later, the chest explodes." },
-            { name: "Training Rabbits", cat: "movement", desc: "Everyone gets Jump Boost 2 for the whole game. As you get kills, your jump level increases by 1 tier. Fall damage is disabled." },
-            { name: "Underground Parallel", cat: "world", desc: "Below Y42 is a copy of the surface. Trees underground are made of ores, stone and sea lanterns. Mineshafts generate floating below Y42." },
-            { name: "Unstable Mining", cat: "mining", desc: "When mining under Y40 there are chances of methane explosions, floods and unstable cave ceilings." },
-            { name: "WebCage", cat: "pvp", desc: "A giant cobweb sphere appears where a player dies." },
-        ];
-
         const grid = document.getElementById('scenarioGrid');
         const searchInput = document.getElementById('search');
         const resultCount = document.getElementById('resultCount');
         const filterBtns = document.querySelectorAll('.filter-btn');
         let activeFilter = 'all';
+        let scenarios = [];
 
         const tagLabels = {
             pvp: 'PvP', mining: 'Mining', survival: 'Survival', teams: 'Teams',
@@ -533,6 +460,27 @@
             `).join('');
         }
 
+        // Fetch scenarios from data/scenarios.json (shared with the Discord bot)
+        grid.innerHTML = `<div class="no-results"><h3>Loading scenarios...</h3></div>`;
+        fetch('data/scenarios.json')
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to load');
+                return res.json();
+            })
+            .then(data => {
+                // Map JSON format (name, description, category) to page format (name, desc, cat)
+                scenarios = data.map(s => ({
+                    name: s.name,
+                    cat: s.category.toLowerCase(),
+                    desc: s.description
+                }));
+                renderScenarios();
+            })
+            .catch(err => {
+                console.error('Error loading scenarios:', err);
+                grid.innerHTML = `<div class="no-results"><h3>Failed to load scenarios</h3><p>Please try refreshing the page.</p></div>`;
+            });
+
         searchInput.addEventListener('input', renderScenarios);
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -542,7 +490,6 @@
                 renderScenarios();
             });
         });
-        renderScenarios();
     </script>
 </body>
 </html>
