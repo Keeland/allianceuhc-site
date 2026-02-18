@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config — Alliance UHC</title>
+    <meta name="description" content="All UHC configuration options available on Alliance UHC. Player heads, potions, border types, and more.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Config — Alliance UHC">
+    <meta property="og:description" content="All UHC configuration options available on Alliance UHC. Player heads, potions, border types, and more.">
+    <meta property="og:image" content="https://site.allianceuhc.space/logo.png">
+    <meta property="og:url" content="https://site.allianceuhc.space/config.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Alliance UHC">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Config — Alliance UHC">
+    <meta name="twitter:description" content="All UHC configuration options available on Alliance UHC. Player heads, potions, border types, and more.">
+    <meta name="twitter:image" content="https://site.allianceuhc.space/logo.png">
+
+    <!-- Theme color -->
+    <meta name="theme-color" content="#FF6A00">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fire-orange: #FF6A00; --fire-yellow: #FFB800; --ember: #FF4500; --gold: #FFC940;
+            --dark: #0A0A0C; --dark-surface: #111115; --dark-card: #16161B; --dark-border: #222228;
+            --text-primary: #F0EDE6; --text-muted: #8A8694;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Rajdhani', sans-serif; background: var(--dark); color: var(--text-primary); overflow-x: hidden; min-height: 100vh; }
+
+        body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+        .ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 50% 30% at 20% 10%, rgba(255,106,0,0.04) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 80% 90%, rgba(255,69,0,0.03) 0%, transparent 70%); }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,12,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,106,0,0.08); }
+        .nav-left { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .nav-logo { height: 32px; width: 32px; border-radius: 6px; }
+        .nav-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-back { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s; display: flex; align-items: center; gap: 0.4rem; }
+        .nav-back:hover { color: var(--fire-orange); }
+
+        .header { padding: 7rem 2rem 2rem; max-width: 1100px; margin: 0 auto; text-align: center; animation: fadeInUp 0.6s ease forwards; }
+        .header-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--fire-orange); margin-bottom: 0.5rem; }
+        .header h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 6vw, 4rem); letter-spacing: 4px; line-height: 1; margin-bottom: 0.75rem; }
+        .header h1 span { background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header p { color: var(--text-muted); font-size: 1rem; max-width: 500px; margin: 0 auto; }
+
+        /* Filter buttons */
+        .filter-row {
+            max-width: 1100px;
+            margin: 1rem auto 1.5rem;
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.6s ease 0.1s forwards;
+            opacity: 0;
+        }
+        .filter-btn {
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            border: 1px solid var(--dark-border);
+            background: var(--dark-card);
+            color: var(--text-muted);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover { border-color: rgba(255,106,0,0.3); color: var(--text-primary); }
+        .filter-btn.active {
+            background: rgba(255,106,0,0.12);
+            border-color: var(--fire-orange);
+            color: var(--fire-orange);
+        }
+
+        /* Category sections */
+        .config-content {
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .config-category { margin-bottom: 2.5rem; }
+        .config-category.hidden { display: none; }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--dark-border);
+        }
+        .category-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--fire-orange);
+            background: rgba(255,106,0,0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+        .category-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Config cards grid */
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .config-card {
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 10px;
+            padding: 1.1rem 1.25rem;
+            transition: border-color 0.3s;
+        }
+        .config-card:hover { border-color: rgba(255,106,0,0.25); }
+
+        .config-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.15rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.35rem;
+        }
+        .config-desc {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            line-height: 1.5;
+            margin-bottom: 0.65rem;
+        }
+        .config-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+        .config-pill {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.5px;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            background: rgba(255,106,0,0.08);
+            border: 1px solid rgba(255,106,0,0.15);
+            color: var(--fire-orange);
+        }
+
+        footer { border-top: 1px solid var(--dark-border); padding: 2rem; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .footer-copy { font-size: 0.7rem; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
+        .footer-home { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: color 0.3s; }
+        .footer-home:hover { color: var(--fire-orange); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .footer-inner { flex-direction: column; gap: 0.75rem; }
+            nav { padding: 0.7rem 1.25rem; }
+            .header { padding: 6rem 1.25rem 1.5rem; }
+            .filter-row { padding: 0 1.25rem; }
+            .config-content { padding: 0 1.25rem; }
+            .config-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient"></div>
+
+    <nav>
+        <a href="index.html" class="nav-left">
+            <img src="logo.png" alt="Alliance UHC" class="nav-logo">
+            <span class="nav-title">Alliance UHC</span>
+        </a>
+        <a href="index.html" class="nav-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Home
+        </a>
+    </nav>
+
+    <div class="header">
+        <div class="header-label">// Game Settings</div>
+        <h1><span>Config</span></h1>
+        <p>All UHC configuration options available on Alliance. Each game can have different settings — check the match post for details.</p>
+    </div>
+
+    <div class="filter-row">
+        <button class="filter-btn active" data-cat="all">All</button>
+        <button class="filter-btn" data-cat="health">Health & Healing</button>
+        <button class="filter-btn" data-cat="combat">Combat & PvP</button>
+        <button class="filter-btn" data-cat="crafting">Crafting & Recipes</button>
+        <button class="filter-btn" data-cat="resources">Resource Rates</button>
+        <button class="filter-btn" data-cat="horses">Horses</button>
+        <button class="filter-btn" data-cat="nether">Nether & Potions</button>
+        <button class="filter-btn" data-cat="world">World & Border</button>
+        <button class="filter-btn" data-cat="gameplay">Gameplay & HUD</button>
+    </div>
+
+    <div class="config-content">
+
+        <!-- 1. Health & Healing -->
+        <div class="config-category" data-category="health">
+            <div class="category-header">
+                <span class="category-number">01</span>
+                <h2 class="category-title">Health & Healing</h2>
+            </div>
+            <div class="config-grid">
+                <div class="config-card">
+                    <div class="config-name">Player Heads</div>
+                    <div class="config-desc">Players drop a head on death. Surrounding it with gold ingots crafts a golden head that heals for a configurable amount of hearts.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">Heal Amount</span>
+                        <span class="config-pill">Stackable</span>
+                        <span class="config-pill">Unstackable</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Absorption</div>
+                    <div class="config-desc">Absorption hearts given when eating a golden apple.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">1 Heart</span>
+                        <span class="config-pill">2 Hearts (Full)</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Starter Absorption</div>
+                    <div class="config-desc">Absorption hearts given to all players at game start.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Configurable Amount</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">God Apples</div>
+                    <div class="config-desc">Notch/Enchanted Golden Apples craftable and usable.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">1.9+ Nerfed Effects</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Combat & PvP -->
+        <div class="config-category" data-category="combat">
+            <div class="category-header">
+                <span class="category-number">02</span>
+                <h2 class="category-title">Combat & PvP</h2>
+            </div>
+            <div class="config-grid">
+                <div class="config-card">
+                    <div class="config-name">Enderpearl Damage</div>
+                    <div class="config-desc">Damage taken when throwing an enderpearl.</div>
+                    <div class="config-values">
+                        <span class="config-pill">0–10 Hearts</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Fire Weapons</div>
+                    <div class="config-desc">Flame and Fire Aspect enchantments allowed on weapons.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">Only From Books</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Crafting & Recipes -->
+        <div class="config-category" data-category="crafting">
+            <div class="category-header">
+                <span class="category-number">03</span>
+                <h2 class="category-title">Crafting & Recipes</h2>
+            </div>
+            <div class="config-grid">
+                <div class="config-card">
+                    <div class="config-name">Double Arrows</div>
+                    <div class="config-desc">Arrow crafting recipe produces double the arrows.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Quadruple Torches</div>
+                    <div class="config-desc">Torch crafting recipe output is quadrupled.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">String Craft</div>
+                    <div class="config-desc">4 wool can be crafted into 1 string.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Hard Melon Recipe</div>
+                    <div class="config-desc">Glistering Melon requires a gold block instead of nuggets.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Bookshelves</div>
+                    <div class="config-desc">Bookshelves can be used for enchanting.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Split Enchants</div>
+                    <div class="config-desc">/split command to split enchanted books into multiple books with separate enchantments.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Resource Rates -->
+        <div class="config-category" data-category="resources">
+            <div class="category-header">
+                <span class="category-number">04</span>
+                <h2 class="category-title">Resource Rates</h2>
+            </div>
+            <div class="config-grid">
+                <div class="config-card">
+                    <div class="config-name">Apple Rates</div>
+                    <div class="config-desc">Drop rate of apples from leaves.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Vanilla (0.55%)</span>
+                        <span class="config-pill">Custom %</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Apple Trees</div>
+                    <div class="config-desc">Which tree types drop apples.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Oak/Dark Oak Only</span>
+                        <span class="config-pill">All Trees</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Shears for Apples</div>
+                    <div class="config-desc">Using shears on leaves can drop apples.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Flint Rates</div>
+                    <div class="config-desc">Drop rate of flint from gravel.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Vanilla (10%)</span>
+                        <span class="config-pill">Custom %</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Horses -->
+        <div class="config-category" data-category="horses">
+            <div class="category-header">
+                <span class="category-number">05</span>
+                <h2 class="category-title">Horses</h2>
+            </div>
+            <div class="config-grid">
+                <div class="config-card">
+                    <div class="config-name">Horses</div>
+                    <div class="config-desc">Horses spawn naturally in the world.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Horse Armor</div>
+                    <div class="config-desc">Horse armor is obtainable.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Horse Healing</div>
+                    <div class="config-desc">How much health food restores to horses.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Not Nerfed</span>
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">Custom % Nerf</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Team Horse</div>
+                    <div class="config-desc">Only one player per team can ride a horse.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Saddle Drop</div>
+                    <div class="config-desc">Saddle drops when a horse dies.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Nether & Potions -->
+        <div class="config-category" data-category="nether">
+            <div class="category-header">
+                <span class="category-number">06</span>
+                <h2 class="category-title">Nether & Potions</h2>
+            </div>
+            <div class="config-grid">
+                <div class="config-card">
+                    <div class="config-name">Nether</div>
+                    <div class="config-desc">The Nether dimension is accessible.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Ghast Drops</div>
+                    <div class="config-desc">What ghasts drop instead of ghast tears.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Normal (Ghast Tear)</span>
+                        <span class="config-pill">Gold Ingot</span>
+                        <span class="config-pill">Gold Nugget</span>
+                        <span class="config-pill">Gold Block</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Quartz XP Nerf</div>
+                    <div class="config-desc">XP from mining nether quartz is halved.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Brewing Stands</div>
+                    <div class="config-desc">Brewing stands can be crafted.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Strength Potions</div>
+                    <div class="config-desc">Blaze powder can be crafted, enabling strength potions to be brewed.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Glowstone</div>
+                    <div class="config-desc">Glowstone can be obtained (for potion upgrading).</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Strength Potion Nerf</div>
+                    <div class="config-desc">Strength potion effect is nerfed to reduce damage bonus.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Splash Potions</div>
+                    <div class="config-desc">Splash potions can be brewed.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Splash Poison Nerf</div>
+                    <div class="config-desc">Splash poison potion duration reduced.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">25%</span>
+                        <span class="config-pill">50%</span>
+                        <span class="config-pill">75%</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Global Potion Nerf</div>
+                    <div class="config-desc">All potion durations reduced by a percentage.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">25%</span>
+                        <span class="config-pill">50%</span>
+                        <span class="config-pill">75%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. World & Border -->
+        <div class="config-category" data-category="world">
+            <div class="category-header">
+                <span class="category-number">07</span>
+                <h2 class="category-title">World & Border</h2>
+            </div>
+            <div class="config-grid">
+                <div class="config-card">
+                    <div class="config-name">Border Type</div>
+                    <div class="config-desc">How the border shrinks toward meetup.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Shrinking (Damage)</span>
+                        <span class="config-pill">Shrinking (Teleport)</span>
+                        <span class="config-pill">Instant</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Border Timing</div>
+                    <div class="config-desc">When the border starts shrinking and how long it takes.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Configurable Minutes</span>
+                        <span class="config-pill">Duration</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Supply Drops</div>
+                    <div class="config-desc">Loot chests drop from the sky at PvP enable, border shrink, and meetup.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">Drops Per Quadrant</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Villager Trades</div>
+                    <div class="config-desc">Villager trading is available.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Smelting Time</div>
+                    <div class="config-desc">How long furnaces take to smelt items.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Vanilla</span>
+                        <span class="config-pill">Custom Seconds</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Gameplay & HUD -->
+        <div class="config-category" data-category="gameplay">
+            <div class="category-header">
+                <span class="category-number">08</span>
+                <h2 class="category-title">Gameplay & HUD</h2>
+            </div>
+            <div class="config-grid">
+                <div class="config-card">
+                    <div class="config-name">Death Lightning</div>
+                    <div class="config-desc">Lightning strikes where a player dies.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Tab Health</div>
+                    <div class="config-desc">Player health shown in the tab list.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Bow Health Display</div>
+                    <div class="config-desc">Shows target health in action bar when you hit with a bow.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Health Command</div>
+                    <div class="config-desc">/h command to check your own health.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Extra XP Drop</div>
+                    <div class="config-desc">Extra XP orbs drop from ores/mobs.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">Configurable Orb Count</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Block Decay</div>
+                    <div class="config-desc">Blocks placed during meetup crumble after a few seconds.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">Configurable Seconds</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Dig Down Prevention</div>
+                    <div class="config-desc">Prevents digging below Y level during meetup.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Anti Portal Trapping</div>
+                    <div class="config-desc">Prevents trapping players in nether portals.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Anti Burn</div>
+                    <div class="config-desc">Prevents burning items on the ground.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Increased Drops</div>
+                    <div class="config-desc">Specific mobs (rabbits, chickens, cows, horses, spiders, zombie pigmen) drop extra loot.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Skeleton Loot Increase</div>
+                    <div class="config-desc">Skeletons drop more arrows and bones.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Blaze Loot Increase</div>
+                    <div class="config-desc">Blazes drop more blaze rods.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">Custom %</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Border Shrink Grace Period</div>
+                    <div class="config-desc">Grace period before taking border damage after it shrinks.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Disabled</span>
+                        <span class="config-pill">Configurable Seconds</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Anti iPvP</div>
+                    <div class="config-desc">Prevents indirect PvP (lava, fire, cactus) before PvP is enabled.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+                <div class="config-card">
+                    <div class="config-name">Natural Regeneration</div>
+                    <div class="config-desc">Health regenerates naturally from food saturation. Usually disabled — that's what makes it UHC.</div>
+                    <div class="config-values">
+                        <span class="config-pill">Enabled</span>
+                        <span class="config-pill">Disabled</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-inner">
+            <a href="index.html" class="footer-home">&larr; Back to Home</a>
+            <div class="footer-copy">&copy; 2026 Alliance UHC &middot; Not affiliated with Mojang Studios</div>
+        </div>
+    </footer>
+
+    <script>
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const categories = document.querySelectorAll('.config-category');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const cat = btn.dataset.cat;
+
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                categories.forEach(section => {
+                    if (cat === 'all' || section.dataset.category === cat) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
