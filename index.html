@@ -290,6 +290,55 @@
         .match-removed-reason { margin-top: 0.5rem; padding: 0.5rem 0.75rem; background: rgba(244,67,54,0.06); border: 1px solid rgba(244,67,54,0.12); border-radius: 6px; font-size: 0.8rem; color: #E57373; }
         .match-removed-reason span { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; color: #EF5350; display: block; margin-bottom: 0.2rem; }
 
+        /* Match expand */
+        .match-expand-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: none;
+            border: none;
+            border-top: 1px solid var(--dark-border);
+            margin-top: 0.75rem;
+            padding: 0.4rem 0;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+        .match-expand-btn:hover { color: var(--text-primary); }
+        .match-expand-btn svg { width: 16px; height: 16px; stroke: currentColor; transition: transform 0.3s; }
+        .match-card.expanded .match-expand-btn svg { transform: rotate(180deg); }
+        .match-body { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+        .match-card.expanded .match-body { max-height: 3000px; }
+        .match-body-inner {
+            padding: 0.75rem 0 0;
+            border-top: 1px solid var(--dark-border);
+        }
+        .match-body h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 1.5px;
+            margin: 1rem 0 0.5rem;
+            background: linear-gradient(135deg, var(--fire-orange), var(--fire-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .match-body h4:first-child { margin-top: 0; }
+        .match-body table { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; }
+        .match-body td {
+            padding: 0.3rem 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            vertical-align: top;
+        }
+        .match-body td:first-child { color: var(--text-primary); font-weight: 600; width: 40%; }
+        .match-body p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.4rem; }
+        .match-body a { color: var(--fire-orange); text-decoration: none; transition: color 0.2s; }
+        .match-body a:hover { color: var(--fire-yellow); }
+        .match-body hr { border: none; height: 1px; background: var(--dark-border); margin: 0.75rem 0; }
+
         /* Footer */
         .footer { position: relative; z-index: 1; border-top: 1px solid var(--dark-border); padding: 2rem; }
         .footer-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
@@ -978,6 +1027,72 @@
                    d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
         }
 
+        // Match body markdown parser
+        function parseMatchContent(content) {
+            if (!content) return '';
+            var lines = content.split('\n');
+            var html = '';
+            var inTable = false;
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                // Skip empty lines
+                if (!line) {
+                    if (inTable) { html += '</table>'; inTable = false; }
+                    continue;
+                }
+                // Skip reddit-style anchors and separator rows
+                if (/^\[.*\]\(#[a-zA-Z]*\)$/.test(line)) continue;
+                if (/^\|\s*\[?\]?\(#[a-zA-Z]*\)?\s*$/.test(line)) continue;
+                if (/^-{3,}$/.test(line)) { html += '<hr>'; continue; }
+                // Table separator row
+                if (/^\|?\s*---/.test(line)) continue;
+                // Headers
+                if (/^#{1,4}\s*/.test(line)) {
+                    if (inTable) { html += '</table>'; inTable = false; }
+                    var text = line.replace(/^#{1,4}\s*/, '').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').trim();
+                    if (text) html += '<h4>' + text + '</h4>';
+                    continue;
+                }
+                // Table rows
+                if (line.indexOf('|') !== -1) {
+                    var cells = line.split('|').map(function(c) { return c.trim(); }).filter(function(c) { return c !== ''; });
+                    // Skip rows that are only reddit formatting
+                    var useful = cells.filter(function(c) { return !/^\[?\]?\(#[a-zA-Z]*\)?$/.test(c) && c !== ''; });
+                    if (useful.length === 0) continue;
+                    if (!inTable) { html += '<table>'; inTable = true; }
+                    html += '<tr>';
+                    for (var j = 0; j < cells.length; j++) {
+                        var cell = cells[j]
+                            .replace(/\[([^\]]*)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+                            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                            .replace(/\[?\]?\(#[a-zA-Z]*\)?/g, '');
+                        if (cell.trim()) html += '<td>' + cell + '</td>';
+                    }
+                    html += '</tr>';
+                    continue;
+                }
+                // Regular text with link/bold parsing
+                if (inTable) { html += '</table>'; inTable = false; }
+                var text = line
+                    .replace(/\[([^\]]*)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+                    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+                if (text.trim()) html += '<p>' + text + '</p>';
+            }
+            if (inTable) html += '</table>';
+            return html;
+        }
+
+        // Toggle match body expand
+        function toggleMatchBody(btn) {
+            var card = btn.closest('.match-card');
+            var wasExpanded = card.classList.contains('expanded');
+            // Collapse all other expanded cards
+            document.querySelectorAll('.match-card.expanded').forEach(function(c) {
+                c.classList.remove('expanded');
+            });
+            if (!wasExpanded) card.classList.add('expanded');
+        }
+
         function renderMatchCard(m, isRemoved) {
             const scenarios = m.scenarios.map(s =>
                 '<span class="match-scenario-tag">' + s + '</span>'
@@ -1012,6 +1127,15 @@
                     '<span>Removed by ' + removedBy + '</span>' +
                     reason +
                 '</div>';
+            }
+
+            if (m.content) {
+                html += '<button class="match-expand-btn" onclick="toggleMatchBody(this)">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+                '</button>' +
+                '<div class="match-body"><div class="match-body-inner">' +
+                    parseMatchContent(m.content) +
+                '</div></div>';
             }
 
             html += '</div>';
