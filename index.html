@@ -9,6 +9,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Open Graph -->
     <meta property="og:title" content="Alliance UHC — Ultra Hardcore Minecraft">
@@ -24,7 +27,7 @@
     <meta name="twitter:description" content="Minecraft UHC server. No natural regeneration. Custom scenarios, 1.8 combat & an active community.">
     <meta name="twitter:image" content="https://site.allianceuhc.space/logo.png">
 
-    <!-- Theme color (browser tab / mobile address bar) -->
+    <!-- Theme color -->
     <meta name="theme-color" content="#FF6A00">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,120 +49,58 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
 
+        /* [6] Page transition */
         body {
             font-family: 'Rajdhani', sans-serif;
             background: var(--dark);
             color: var(--text-primary);
             overflow-x: hidden;
             min-height: 100vh;
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
+        body.loaded { opacity: 1; }
+        body.transitioning { opacity: 0; }
 
-        .backdrop {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-        }
+        .backdrop { position: fixed; inset: 0; z-index: 0; }
+        .backdrop-image { position: absolute; inset: 0; background: url('background.png') center/cover no-repeat; }
+        .backdrop-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 45%, rgba(10,10,12,0.4) 0%, rgba(10,10,12,0.92) 100%), linear-gradient(to bottom, rgba(10,10,12,0.5) 0%, rgba(10,10,12,0.7) 50%, rgba(10,10,12,0.98) 100%), linear-gradient(to top, rgba(10,10,12,0.95) 0%, transparent 30%), linear-gradient(to left, rgba(10,10,12,0.7) 0%, transparent 20%), linear-gradient(to right, rgba(10,10,12,0.7) 0%, transparent 20%); }
+        .backdrop-glow { position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(255,106,0,0.07) 0%, rgba(255,106,0,0.02) 40%, transparent 70%); pointer-events: none; }
+        .backdrop-noise { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; }
 
-        .backdrop-image {
-            position: absolute;
-            inset: 0;
-            background: url('background.png') center/cover no-repeat;
-        }
-
-        .backdrop-overlay {
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 60% 50% at 50% 45%, rgba(10,10,12,0.4) 0%, rgba(10,10,12,0.92) 100%),
-                linear-gradient(to bottom, rgba(10,10,12,0.5) 0%, rgba(10,10,12,0.7) 50%, rgba(10,10,12,0.98) 100%),
-                linear-gradient(to top, rgba(10,10,12,0.95) 0%, transparent 30%),
-                linear-gradient(to left, rgba(10,10,12,0.7) 0%, transparent 20%),
-                linear-gradient(to right, rgba(10,10,12,0.7) 0%, transparent 20%);
-        }
-
-        .backdrop-glow {
-            position: absolute;
-            top: 35%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,106,0,0.07) 0%, rgba(255,106,0,0.02) 40%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .backdrop-noise {
-            position: absolute;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-        }
+        /* [1] Ember canvas */
+        #embers { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
         /* Nav */
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            padding: 0.7rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(10, 10, 12, 0.6);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,106,0,0.08);
-            transition: all 0.3s;
-        }
-
-        nav.scrolled {
-            background: rgba(10, 10, 12, 0.92);
-            padding: 0.55rem 2rem;
-        }
-
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0.7rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(10, 10, 12, 0.6); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,106,0,0.08); transition: all 0.3s; }
+        nav.scrolled { background: rgba(10, 10, 12, 0.92); padding: 0.55rem 2rem; }
         .nav-left { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
         .nav-logo { height: 30px; width: 30px; border-radius: 6px; }
         .nav-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 2px; background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-
         .nav-links { display: flex; align-items: center; gap: 1.75rem; list-style: none; }
         .nav-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s; position: relative; }
         .nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1.5px; background: linear-gradient(90deg, var(--fire-orange), var(--fire-yellow)); transition: width 0.3s; }
         .nav-links a:hover { color: var(--text-primary); }
         .nav-links a:hover::after { width: 100%; }
-
         .nav-discord { background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow)) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; background-clip: text !important; font-weight: 700 !important; }
         .nav-discord::after { display: none !important; }
         .nav-discord:hover { opacity: 0.8; }
-
         .mobile-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
         .mobile-toggle span { width: 22px; height: 2px; background: var(--text-primary); transition: all 0.3s; display: block; }
 
         /* Hero */
-        .hero {
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-        }
-
+        .hero { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; }
         .logo-container { margin-bottom: 1.5rem; animation: fadeIn 1s ease forwards; opacity: 0; }
         .logo-img { width: 140px; height: 140px; border-radius: 20px; box-shadow: 0 0 60px rgba(255,106,0,0.2), 0 0 120px rgba(255,106,0,0.08); }
-
         .title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 5.5rem); letter-spacing: 6px; line-height: 1; text-align: center; margin-bottom: 0.5rem; animation: fadeInUp 0.8s ease 0.15s forwards; opacity: 0; }
         .title .fire { background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-
         .tagline { font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,184,0,0.6); text-align: center; margin-bottom: 2.5rem; animation: fadeInUp 0.8s ease 0.3s forwards; opacity: 0; }
-
         .ip-block { display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,106,0,0.15); border-radius: 12px; padding: 0.75rem 1.25rem; cursor: pointer; margin-bottom: 2rem; transition: all 0.3s; animation: fadeInUp 0.8s ease 0.45s forwards; opacity: 0; backdrop-filter: blur(10px); }
         .ip-block:hover { border-color: var(--fire-orange); background: rgba(255,106,0,0.06); box-shadow: 0 0 30px rgba(255,106,0,0.1); }
         .ip-label { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
         .ip-address { font-family: 'Space Mono', monospace; font-size: 1.15rem; color: var(--fire-yellow); }
         .ip-copy-hint { font-size: 0.7rem; color: rgba(255,255,255,0.25); padding: 0.25rem 0.6rem; background: rgba(255,255,255,0.05); border-radius: 4px; white-space: nowrap; transition: all 0.3s; }
         .ip-block:hover .ip-copy-hint { color: var(--fire-orange); background: rgba(255,106,0,0.1); }
-
         .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; animation: fadeInUp 0.8s ease 0.6s forwards; opacity: 0; }
         .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.6rem; border-radius: 10px; text-decoration: none; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; transition: all 0.3s; border: none; cursor: pointer; }
         .btn svg { width: 18px; height: 18px; }
@@ -167,443 +108,400 @@
         .btn-discord:hover { background: #4752c4; transform: translateY(-2px); box-shadow: 0 6px 25px rgba(88,101,242,0.35); }
         .btn-twitter { background: rgba(255,255,255,0.06); color: #ccc; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
         .btn-twitter:hover { background: rgba(255,255,255,0.1); color: #fff; transform: translateY(-2px); }
-
         .hero-divider { width: 60px; height: 2px; background: linear-gradient(90deg, transparent, var(--fire-orange), transparent); margin-bottom: 1.5rem; animation: fadeIn 1s ease 0.8s forwards; opacity: 0; }
         .info { text-align: center; max-width: 460px; color: rgba(255,255,255,0.4); font-size: 0.95rem; line-height: 1.7; animation: fadeIn 1s ease 0.9s forwards; opacity: 0; }
 
-        /* Sections (below hero) */
-        .content { position: relative; z-index: 1; }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
+        /* [2] Scroll indicator */
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            animation: fadeIn 1.5s ease 1.2s forwards, bounce 2s ease-in-out 2s infinite;
+            opacity: 0;
+            cursor: pointer;
         }
-
-        .section-label {
+        .scroll-hint span {
             font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 3px;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            color: var(--fire-orange);
-            margin-bottom: 0.5rem;
+            color: rgba(255,255,255,0.2);
+        }
+        .scroll-hint svg { width: 20px; height: 20px; stroke: rgba(255,255,255,0.2); }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(6px); }
         }
 
-        .section-title {
+        /* Sections */
+        .content { position: relative; z-index: 1; }
+        .section-header { text-align: center; margin-bottom: 1.5rem; }
+        .section-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--fire-orange); margin-bottom: 0.5rem; }
+        .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 2.8rem); letter-spacing: 3px; line-height: 1; }
+        .section-title span { background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        /* [3] Section dividers */
+        .section-divider {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .section-divider hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,106,0,0.2), transparent);
+        }
+
+        /* Scroll reveal */
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Features */
+        .features-section { max-width: 900px; margin: 0 auto; padding: 4rem 2rem 3rem; }
+        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+        .feature-card { background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 12px; padding: 1.5rem; transition: all 0.3s; position: relative; overflow: hidden; }
+        .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--fire-orange), var(--fire-yellow)); opacity: 0; transition: opacity 0.3s; }
+        .feature-card:hover { border-color: rgba(255,106,0,0.25); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-icon { width: 36px; height: 36px; margin-bottom: 0.75rem; stroke: var(--fire-orange); }
+        .feature-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 1.5px; margin-bottom: 0.3rem; }
+        .feature-desc { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; font-weight: 400; }
+
+        /* Quick Links */
+        .links-section { max-width: 900px; margin: 0 auto; padding: 1rem 2rem 3rem; }
+        .links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
+        .link-card { background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 12px; padding: 1.25rem; text-decoration: none; color: var(--text-primary); transition: all 0.3s; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.4rem; }
+        .link-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--fire-orange), var(--fire-yellow)); opacity: 0; transition: opacity 0.3s; }
+        .link-card:hover { border-color: rgba(255,106,0,0.25); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+        .link-card:hover::before { opacity: 1; }
+        .link-card-icon { width: 28px; height: 28px; stroke: var(--fire-orange); margin-bottom: 0.25rem; }
+        .link-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 1.5px; }
+        .link-card-desc { color: var(--text-muted); font-size: 0.78rem; font-weight: 400; }
+        .link-card-arrow { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem; transition: color 0.3s, transform 0.3s; }
+        .link-card:hover .link-card-arrow { color: var(--fire-orange); transform: translateX(3px); }
+
+        /* [7] What is UHC */
+        .uhc-section { max-width: 900px; margin: 0 auto; padding: 1rem 2rem 3rem; }
+        .uhc-card {
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .uhc-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(255,106,0,0.03) 0%, transparent 70%); }
+        .uhc-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            position: relative;
+        }
+        .uhc-step { text-align: center; }
+        .uhc-step-num {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(2rem, 5vw, 2.8rem);
-            letter-spacing: 3px;
-            line-height: 1;
-        }
-
-        .section-title span {
+            font-size: 2rem;
             background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
         }
-
-        /* Scroll reveal */
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Features Section */
-        .features-section {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 4rem 2rem 3rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-
-        .feature-card {
-            background: var(--dark-card);
-            border: 1px solid var(--dark-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--fire-orange), var(--fire-yellow));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .feature-card:hover {
-            border-color: rgba(255,106,0,0.25);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-        }
-
-        .feature-card:hover::before { opacity: 1; }
-
-        .feature-icon {
-            width: 36px;
-            height: 36px;
-            margin-bottom: 0.75rem;
-            stroke: var(--fire-orange);
-        }
-
-        .feature-title {
+        .uhc-step h4 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.3rem;
-            letter-spacing: 1.5px;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
             margin-bottom: 0.3rem;
         }
-
-        .feature-desc {
+        .uhc-step p {
             color: var(--text-muted);
-            font-size: 0.88rem;
+            font-size: 0.82rem;
             line-height: 1.5;
             font-weight: 400;
         }
 
-        /* Quick Links Section */
-        .links-section {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 1rem 2rem 3rem;
-        }
+        /* Schedule */
+        .schedule-section { max-width: 900px; margin: 0 auto; padding: 1rem 2rem 3rem; }
+        .match-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .match-card { background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 12px; padding: 1.25rem 1.5rem; transition: all 0.3s; position: relative; overflow: hidden; }
+        .match-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--fire-orange), var(--fire-yellow)); opacity: 0; transition: opacity 0.3s; }
+        .match-card:hover { border-color: rgba(255,106,0,0.25); transform: translateX(2px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .match-card:hover::before { opacity: 1; }
+        .match-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.5rem; }
+        .match-date { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 1px; }
+        .match-countdown { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--fire-orange); letter-spacing: 0.5px; }
+        .match-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+        .match-badge { font-family: 'Space Mono', monospace; font-size: 0.55rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; }
+        .badge-region { background: rgba(33,150,243,0.1); color: #64B5F6; }
+        .badge-teams { background: rgba(156,39,176,0.1); color: #CE93D8; }
+        .badge-host { background: rgba(255,106,0,0.1); color: var(--fire-orange); }
+        .match-scenarios { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.6rem; }
+        .match-scenario-tag { font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 4px; background: rgba(255,255,255,0.04); border: 1px solid var(--dark-border); color: var(--text-muted); cursor: default; transition: all 0.2s; }
+        .match-scenario-tag:hover { border-color: rgba(255,106,0,0.3); color: var(--text-primary); background: rgba(255,106,0,0.06); }
+        .match-details { display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.78rem; color: var(--text-muted); }
+        .match-detail { display: flex; align-items: center; gap: 0.3rem; }
+        .match-detail svg { width: 13px; height: 13px; stroke: var(--text-muted); flex-shrink: 0; }
+        .match-empty { text-align: center; padding: 3rem 2rem; background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 12px; }
+        .match-empty h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 2px; margin-bottom: 0.5rem; }
+        .match-empty p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
+        .match-empty .btn { font-size: 0.95rem; padding: 0.6rem 1.3rem; }
 
-        .links-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.75rem;
-        }
-
-        .link-card {
-            background: var(--dark-card);
-            border: 1px solid var(--dark-border);
-            border-radius: 12px;
-            padding: 1.25rem;
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 0.4rem;
-        }
-
-        .link-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--fire-orange), var(--fire-yellow));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .link-card:hover {
-            border-color: rgba(255,106,0,0.25);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-        }
-
-        .link-card:hover::before { opacity: 1; }
-
-        .link-card-icon {
-            width: 28px;
-            height: 28px;
-            stroke: var(--fire-orange);
-            margin-bottom: 0.25rem;
-        }
-
-        .link-card-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.15rem;
-            letter-spacing: 1.5px;
-        }
-
-        .link-card-desc {
-            color: var(--text-muted);
-            font-size: 0.78rem;
-            font-weight: 400;
-        }
-
-        .link-card-arrow {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            margin-top: 0.25rem;
-            transition: color 0.3s, transform 0.3s;
-        }
-
-        .link-card:hover .link-card-arrow {
-            color: var(--fire-orange);
-            transform: translateX(3px);
-        }
-
-        /* Schedule Section */
-        .schedule-section {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 1rem 2rem 3rem;
-        }
-
-        .match-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .match-card {
+        /* [9] Skeleton loader */
+        .skeleton-card {
             background: var(--dark-card);
             border: 1px solid var(--dark-border);
             border-radius: 12px;
             padding: 1.25rem 1.5rem;
-            transition: all 0.3s;
-            position: relative;
             overflow: hidden;
         }
-
-        .match-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; bottom: 0;
-            width: 2px;
-            background: linear-gradient(180deg, var(--fire-orange), var(--fire-yellow));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .match-card:hover {
-            border-color: rgba(255,106,0,0.25);
-            transform: translateX(2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-
-        .match-card:hover::before { opacity: 1; }
-
-        .match-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.6rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .match-date {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-        }
-
-        .match-countdown {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--fire-orange);
-            letter-spacing: 0.5px;
-        }
-
-        .match-badges {
-            display: flex;
-            gap: 0.4rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .match-badge {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.55rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 0.2rem 0.5rem;
+        .skeleton-line {
+            height: 14px;
             border-radius: 4px;
-            white-space: nowrap;
+            background: linear-gradient(90deg, var(--dark-border) 25%, rgba(255,255,255,0.06) 50%, var(--dark-border) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-line.wide { width: 60%; margin-bottom: 0.75rem; height: 18px; }
+        .skeleton-line.medium { width: 40%; margin-bottom: 0.5rem; }
+        .skeleton-line.tags { width: 80%; margin-bottom: 0.5rem; height: 12px; }
+        .skeleton-line.details { width: 70%; height: 12px; }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
-        .badge-region { background: rgba(33,150,243,0.1); color: #64B5F6; }
-        .badge-teams { background: rgba(156,39,176,0.1); color: #CE93D8; }
-        .badge-host { background: rgba(255,106,0,0.1); color: var(--fire-orange); }
-
-        .match-scenarios {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
-            margin-bottom: 0.6rem;
-        }
-
-        .match-scenario-tag {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.15rem 0.5rem;
-            border-radius: 4px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--dark-border);
-            color: var(--text-muted);
-        }
-
-        .match-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .match-detail {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .match-detail svg {
-            width: 13px;
-            height: 13px;
-            stroke: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        .match-empty {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: var(--dark-card);
-            border: 1px solid var(--dark-border);
-            border-radius: 12px;
-        }
-
-        .match-empty h3 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.4rem;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-        }
-
-        .match-empty p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .match-empty .btn { font-size: 0.95rem; padding: 0.6rem 1.3rem; }
+        /* Removed matches */
+        .match-toggle-row { display: flex; justify-content: flex-end; margin-bottom: 0.75rem; }
+        .match-toggle-btn { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 6px; padding: 0.35rem 0.75rem; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; }
+        .match-toggle-btn:hover { border-color: rgba(255,106,0,0.3); color: var(--text-primary); }
+        .match-toggle-btn.active { background: rgba(255,106,0,0.1); border-color: var(--fire-orange); color: var(--fire-orange); }
+        .removed-list { display: none; margin-top: 0.75rem; }
+        .removed-list.show { display: flex; flex-direction: column; gap: 0.75rem; }
+        .match-card.removed { opacity: 0.6; border-color: rgba(244,67,54,0.15); }
+        .match-card.removed::before { background: linear-gradient(180deg, #E57373, #EF5350); }
+        .match-card.removed:hover { border-color: rgba(244,67,54,0.3); opacity: 0.8; }
+        .match-removed-reason { margin-top: 0.5rem; padding: 0.5rem 0.75rem; background: rgba(244,67,54,0.06); border: 1px solid rgba(244,67,54,0.12); border-radius: 6px; font-size: 0.8rem; color: #E57373; }
+        .match-removed-reason span { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; color: #EF5350; display: block; margin-bottom: 0.2rem; }
 
         /* Footer */
-        .footer {
-            position: relative;
-            z-index: 1;
-            border-top: 1px solid var(--dark-border);
-            padding: 2rem;
-        }
-
-        .footer-inner {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer-copy {
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.2);
-            letter-spacing: 1px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1.25rem;
-        }
-
-        .footer-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
+        .footer { position: relative; z-index: 1; border-top: 1px solid var(--dark-border); padding: 2rem; }
+        .footer-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .footer-copy { font-size: 0.7rem; color: rgba(255,255,255,0.2); letter-spacing: 1px; }
+        .footer-links { display: flex; gap: 1.25rem; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: color 0.3s; }
         .footer-links a:hover { color: var(--fire-orange); }
 
         /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: rgba(20,20,25,0.95);
-            border: 1px solid var(--fire-orange);
-            color: var(--fire-yellow);
-            padding: 0.65rem 1.3rem;
-            border-radius: 8px;
-            font-family: 'Space Mono', monospace;
-            font-size: 0.8rem;
-            z-index: 100;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 8px 30px rgba(255,106,0,0.15);
-            backdrop-filter: blur(16px);
-        }
-
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px); background: rgba(20,20,25,0.95); border: 1px solid var(--fire-orange); color: var(--fire-yellow); padding: 0.65rem 1.3rem; border-radius: 8px; font-family: 'Space Mono', monospace; font-size: 0.8rem; z-index: 100; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 8px 30px rgba(255,106,0,0.15); backdrop-filter: blur(16px); }
         .toast.show { transform: translateX(-50%) translateY(0); }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Scenario tooltip */
+        .scenario-tooltip {
+            position: fixed;
+            z-index: 200;
+            max-width: 300px;
+            background: rgba(16,16,21,0.97);
+            border: 1px solid rgba(255,106,0,0.25);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: opacity 0.2s, transform 0.2s;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         }
+        .scenario-tooltip.visible { opacity: 1; transform: translateY(0); }
+        .scenario-tooltip-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .scenario-tooltip-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+        }
+        .scenario-tooltip-desc { color: var(--text-muted); font-size: 0.8rem; line-height: 1.5; font-weight: 400; }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Scenario tag colors */
+        .tag-pvp { background: rgba(255,69,0,0.12); color: #FF6A5E; }
+        .tag-mining { background: rgba(0,180,216,0.1); color: #48CAE4; }
+        .tag-survival { background: rgba(76,175,80,0.1); color: #81C784; }
+        .tag-teams { background: rgba(156,39,176,0.1); color: #CE93D8; }
+        .tag-movement { background: rgba(255,184,0,0.1); color: var(--fire-yellow); }
+        .tag-loot { background: rgba(255,152,0,0.1); color: #FFB74D; }
+        .tag-world { background: rgba(33,150,243,0.1); color: #64B5F6; }
+        .tag-mobs { background: rgba(244,67,54,0.1); color: #E57373; }
+        .tag-misc { background: rgba(158,158,158,0.1); color: #BDBDBD; }
+
+        /* Back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 90;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--ember), var(--fire-orange), var(--fire-yellow));
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(255,106,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
         }
+        .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .back-to-top:hover { transform: translateY(-3px); box-shadow: 0 6px 30px rgba(255,106,0,0.45); }
+
+        /* Discord count */
+        .discord-count { color: var(--fire-orange); font-weight: 600; }
+
+        /* Notification button */
+        .schedule-header-row { display: flex; align-items: center; justify-content: center; gap: 0.75rem; }
+        .notif-btn {
+            background: var(--dark-card);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .notif-btn:hover { border-color: rgba(255,106,0,0.3); color: var(--text-primary); }
+        .notif-btn.active { border-color: var(--fire-orange); color: var(--fire-orange); background: rgba(255,106,0,0.08); }
+        .notif-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; }
+
+        /* Share match button */
+        .match-share-btn {
+            background: none;
+            border: 1px solid var(--dark-border);
+            border-radius: 5px;
+            padding: 0.15rem 0.4rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .match-share-btn:hover { border-color: rgba(255,106,0,0.3); color: var(--text-primary); }
+        .match-share-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; flex-shrink: 0; }
+
+        /* Countdown banner */
+        .countdown-banner {
+            position: fixed;
+            top: -60px;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            background: linear-gradient(135deg, rgba(255,69,0,0.15), rgba(255,106,0,0.1));
+            border-bottom: 1px solid rgba(255,106,0,0.2);
+            backdrop-filter: blur(20px);
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .countdown-banner.visible { top: 0; }
+        .countdown-banner-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .countdown-banner-text strong {
+            background: linear-gradient(135deg, var(--fire-orange), var(--fire-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .countdown-banner-time {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--fire-orange);
+            letter-spacing: 0.5px;
+        }
+        .countdown-banner-dismiss {
+            position: absolute;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: color 0.2s;
+        }
+        .countdown-banner-dismiss:hover { color: var(--text-primary); }
+        .countdown-banner-dismiss svg { width: 14px; height: 14px; stroke: currentColor; }
+        .countdown-banner.visible ~ nav { top: 33px; }
+        .countdown-banner.visible ~ .hero { padding-top: 3.5rem; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 640px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0; right: 0;
-                flex-direction: column;
-                background: rgba(10, 10, 12, 0.97);
-                backdrop-filter: blur(20px);
-                padding: 1.25rem 2rem;
-                gap: 1rem;
-                border-bottom: 1px solid var(--dark-border);
-            }
-
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: rgba(10, 10, 12, 0.97); backdrop-filter: blur(20px); padding: 1.25rem 2rem; gap: 1rem; border-bottom: 1px solid var(--dark-border); }
             .nav-links.open { display: flex; }
             .mobile-toggle { display: flex; }
-
             .logo-img { width: 110px; height: 110px; border-radius: 16px; }
             .ip-block { flex-direction: column; gap: 0.4rem; text-align: center; padding: 0.9rem 1.5rem; }
             .ip-copy-hint { display: none; }
             .actions { flex-direction: column; align-items: center; }
             .btn { width: 100%; justify-content: center; max-width: 260px; }
-
             .features-grid { grid-template-columns: 1fr; }
             .links-grid { grid-template-columns: repeat(2, 1fr); }
-
+            .uhc-steps { grid-template-columns: 1fr; gap: 1rem; }
             .features-section { padding: 3rem 1.25rem 2rem; }
             .links-section { padding: 1rem 1.25rem 2rem; }
+            .uhc-section { padding: 1rem 1.25rem 2rem; }
             .schedule-section { padding: 1rem 1.25rem 2rem; }
-
+            .section-divider { padding: 0 1.25rem; }
             .footer-inner { flex-direction: column; gap: 0.75rem; text-align: center; }
+            .scroll-hint { bottom: 1.25rem; }
+            .back-to-top { bottom: 1.25rem; right: 1.25rem; width: 40px; height: 40px; }
         }
     </style>
 </head>
 <body>
+
+    <div class="countdown-banner" id="countdownBanner">
+        <span class="countdown-banner-text" id="bannerText"></span>
+        <span class="countdown-banner-time" id="bannerTime"></span>
+        <button class="countdown-banner-dismiss" id="bannerDismiss" aria-label="Dismiss">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+    </div>
 
     <div class="backdrop">
         <div class="backdrop-image"></div>
@@ -611,6 +509,9 @@
         <div class="backdrop-glow"></div>
         <div class="backdrop-noise"></div>
     </div>
+
+    <!-- [1] Ember particles -->
+    <canvas id="embers"></canvas>
 
     <nav id="navbar">
         <a href="index.html" class="nav-left">
@@ -625,6 +526,7 @@
             <li><a href="rules.html">Rules</a></li>
             <li><a href="staff.html">Staff</a></li>
             <li><a href="status.html">Status</a></li>
+            <li><a href="faq.html">FAQ</a></li>
             <li><a href="https://discord.allianceuhc.space" target="_blank" class="nav-discord">Discord</a></li>
         </ul>
     </nav>
@@ -664,9 +566,15 @@
             Custom scenarios, 1.8 Combat &amp; an active community.<br>
             Join the Discord to find matches.
         </p>
+
+        <!-- [2] Scroll indicator -->
+        <div class="scroll-hint" onclick="document.querySelector('.content').scrollIntoView({behavior:'smooth'})">
+            <span>Scroll</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M7 13l5 5 5-5M7 7l5 5 5-5"/></svg>
+        </div>
     </section>
 
-    <!-- Content below hero -->
+    <!-- Content -->
     <div class="content">
 
         <!-- Features -->
@@ -683,7 +591,8 @@
                 </div>
                 <div class="feature-card">
                     <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                    <div class="feature-title">60+ Scenarios</div>
+                    <!-- [4] Dynamic count + [11] Animated number -->
+                    <div class="feature-title"><span id="scenarioCount">60</span>+ Scenarios</div>
                     <div class="feature-desc">Custom game modes that change every match.</div>
                 </div>
                 <div class="feature-card">
@@ -694,10 +603,13 @@
                 <div class="feature-card">
                     <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     <div class="feature-title">Active Community</div>
-                    <div class="feature-desc">Join our Discord for match announcements, events, and an active player community.</div>
+                    <div class="feature-desc"><span id="discordMemberCount"></span>Join our Discord for match announcements, events, and an active player community.</div>
                 </div>
             </div>
         </section>
+
+        <!-- [3] Divider -->
+        <div class="section-divider reveal"><hr></div>
 
         <!-- Quick Links -->
         <section class="links-section reveal">
@@ -706,44 +618,108 @@
                 <h2 class="section-title"><span>Quick Links</span></h2>
             </div>
             <div class="links-grid">
-                <a href="scenarios.html" class="link-card">
+                <a href="scenarios.html" class="link-card page-link">
                     <svg class="link-card-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     <div class="link-card-title">Scenarios</div>
                     <div class="link-card-desc">Browse 60+ game modes</div>
                     <div class="link-card-arrow">&rarr;</div>
                 </a>
-                <a href="rules.html" class="link-card">
+                <a href="rules.html" class="link-card page-link">
                     <svg class="link-card-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     <div class="link-card-title">Rules</div>
                     <div class="link-card-desc">Know the rules</div>
                     <div class="link-card-arrow">&rarr;</div>
                 </a>
-                <a href="staff.html" class="link-card">
+                <a href="staff.html" class="link-card page-link">
                     <svg class="link-card-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                     <div class="link-card-title">Staff</div>
                     <div class="link-card-desc">Meet the team</div>
                     <div class="link-card-arrow">&rarr;</div>
                 </a>
-                <a href="status.html" class="link-card">
+                <a href="status.html" class="link-card page-link">
                     <svg class="link-card-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     <div class="link-card-title">Status</div>
                     <div class="link-card-desc">Server status</div>
                     <div class="link-card-arrow">&rarr;</div>
                 </a>
+                <a href="faq.html" class="link-card page-link">
+                    <svg class="link-card-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.5"/></svg>
+                    <div class="link-card-title">FAQ</div>
+                    <div class="link-card-desc">Common questions</div>
+                    <div class="link-card-arrow">&rarr;</div>
+                </a>
+                <a href="news.html" class="link-card page-link">
+                    <svg class="link-card-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><line x1="10" y1="6" x2="18" y2="6"/><line x1="10" y1="10" x2="18" y2="10"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+                    <div class="link-card-title">News</div>
+                    <div class="link-card-desc">Latest updates</div>
+                    <div class="link-card-arrow">&rarr;</div>
+                </a>
             </div>
         </section>
 
-        <!-- Upcoming Matches -->
+        <!-- [3] Divider -->
+        <div class="section-divider reveal"><hr></div>
+
+        <!-- [7] What is UHC -->
+        <section class="uhc-section reveal">
+            <div class="section-header">
+                <div class="section-label">// New Here?</div>
+                <h2 class="section-title"><span>What is UHC?</span></h2>
+            </div>
+            <div class="uhc-card">
+                <div class="uhc-steps">
+                    <div class="uhc-step">
+                        <div class="uhc-step-num">01</div>
+                        <h4>No Natural Regen</h4>
+                        <p>Health doesn't regenerate from food. The only way to heal is golden apples or potions. Every heart matters.</p>
+                    </div>
+                    <div class="uhc-step">
+                        <div class="uhc-step-num">02</div>
+                        <h4>Gather &amp; Survive</h4>
+                        <p>Mine resources, craft gear, and prepare for battle. You have limited time before the border shrinks and PvP enables.</p>
+                    </div>
+                    <div class="uhc-step">
+                        <div class="uhc-step-num">03</div>
+                        <h4>Last One Standing</h4>
+                        <p>Fight to be the last player or team alive. At meetup, everyone comes together for a final battle at 0,0.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- [3] Divider -->
+        <div class="section-divider reveal"><hr></div>
+
+        <!-- Schedule -->
         <section class="schedule-section reveal">
             <div class="section-header">
                 <div class="section-label">// Upcoming Matches</div>
-                <h2 class="section-title"><span>Schedule</span></h2>
-            </div>
-            <div class="match-list" id="matchList">
-                <div class="match-empty">
-                    <h3>Loading matches...</h3>
+                <div class="schedule-header-row">
+                    <h2 class="section-title"><span>Schedule</span></h2>
+                    <button class="notif-btn" id="notifBtn" title="Enable match notifications">
+                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </button>
                 </div>
             </div>
+            <!-- [9] Skeleton loading state -->
+            <div class="match-list" id="matchList">
+                <div class="skeleton-card">
+                    <div class="skeleton-line wide"></div>
+                    <div class="skeleton-line medium"></div>
+                    <div class="skeleton-line tags"></div>
+                    <div class="skeleton-line details"></div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-line wide"></div>
+                    <div class="skeleton-line medium"></div>
+                    <div class="skeleton-line tags"></div>
+                    <div class="skeleton-line details"></div>
+                </div>
+            </div>
+            <div class="match-toggle-row" id="removedToggleRow" style="display:none;">
+                <button class="match-toggle-btn" id="removedToggle" onclick="toggleRemoved()">Show Removed</button>
+            </div>
+            <div class="removed-list" id="removedList"></div>
         </section>
 
     </div>
@@ -759,9 +735,118 @@
         </div>
     </footer>
 
+    <button class="back-to-top" id="backToTop" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"/>
+        </svg>
+    </button>
+
+    <div class="scenario-tooltip" id="scenarioTooltip">
+        <div class="scenario-tooltip-name">
+            <span id="tooltipName"></span>
+            <span class="scenario-tooltip-tag" id="tooltipTag"></span>
+        </div>
+        <div class="scenario-tooltip-desc" id="tooltipDesc"></div>
+    </div>
+
     <div class="toast" id="toast">&#10003; Copied to clipboard</div>
 
     <script>
+        // Seasonal themes — override CSS vars before page renders
+        (function() {
+            const now = new Date();
+            const m = now.getMonth() + 1;
+            const d = now.getDate();
+            const root = document.documentElement.style;
+            if ((m === 10 && d >= 15) || (m === 11 && d <= 1)) {
+                root.setProperty('--fire-orange', '#9B59B6');
+                root.setProperty('--fire-yellow', '#E67E22');
+                root.setProperty('--ember', '#8E44AD');
+            } else if (m === 12 && d >= 10) {
+                root.setProperty('--fire-orange', '#E74C3C');
+                root.setProperty('--fire-yellow', '#2ECC71');
+                root.setProperty('--ember', '#C0392B');
+            } else if (m === 2 && d >= 10 && d <= 16) {
+                root.setProperty('--fire-orange', '#E91E63');
+                root.setProperty('--fire-yellow', '#FF5252');
+                root.setProperty('--ember', '#C2185B');
+            }
+        })();
+
+        // [6] Page transition — fade in on load
+        document.body.classList.add('loaded');
+
+        // [6] Smooth page transitions for internal links
+        document.querySelectorAll('a.page-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && !href.startsWith('http') && !href.startsWith('#')) {
+                    e.preventDefault();
+                    document.body.classList.add('transitioning');
+                    setTimeout(() => { window.location.href = href; }, 350);
+                }
+            });
+        });
+
+        // [1] Ember particles
+        (function() {
+            const canvas = document.getElementById('embers');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const COUNT = 35;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            function createParticle() {
+                return {
+                    x: Math.random() * canvas.width,
+                    y: canvas.height + 10,
+                    size: Math.random() * 2.5 + 0.5,
+                    speedY: -(Math.random() * 0.6 + 0.2),
+                    speedX: (Math.random() - 0.5) * 0.3,
+                    opacity: Math.random() * 0.5 + 0.2,
+                    life: 0,
+                    maxLife: Math.random() * 400 + 200,
+                    hue: Math.random() * 30 + 15
+                };
+            }
+
+            for (let i = 0; i < COUNT; i++) {
+                const p = createParticle();
+                p.y = Math.random() * canvas.height;
+                p.life = Math.random() * p.maxLife;
+                particles.push(p);
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, i) => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    p.life++;
+                    const progress = p.life / p.maxLife;
+                    const alpha = p.opacity * (1 - progress);
+
+                    if (alpha <= 0 || p.y < -10) {
+                        particles[i] = createParticle();
+                        return;
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * (1 - progress * 0.5), 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255,' + Math.round(106 + p.hue) + ',0,' + alpha + ')';
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
         // Copy IP
         function copyIP() {
             navigator.clipboard.writeText('na.allianceuhc.space').then(() => {
@@ -771,9 +856,11 @@
             });
         }
 
-        // Scrolled nav
+        // Scrolled nav + back to top
+        const backToTop = document.getElementById('backToTop');
         window.addEventListener('scroll', () => {
             document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+            backToTop.classList.toggle('visible', window.scrollY > 300);
         });
 
         // Mobile menu close
@@ -783,20 +870,88 @@
             });
         });
 
-        // Scroll reveal
+        // Scroll reveal + [11] number counting
+        let scenarioCountAnimated = false;
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    // [11] Trigger count animation when features section appears
+                    if (entry.target.classList.contains('features-section') && !scenarioCountAnimated) {
+                        scenarioCountAnimated = true;
+                        animateCount();
+                    }
                 }
             });
         }, { threshold: 0.1 });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+        // [4] Dynamic scenario count + [11] Counting animation
+        let targetCount = 60;
+        function animateCount() {
+            const el = document.getElementById('scenarioCount');
+            let current = 0;
+            const duration = 1200;
+            const start = performance.now();
+            function step(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                current = Math.round(eased * targetCount);
+                el.textContent = current;
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        // [4] Fetch actual scenario count + build tooltip lookup
+        let scenarioLookup = {};
+        fetch('data/scenarios.json')
+            .then(r => r.json())
+            .then(data => {
+                targetCount = data.length;
+                if (!scenarioCountAnimated) {
+                    document.getElementById('scenarioCount').textContent = data.length;
+                }
+                data.forEach(s => {
+                    scenarioLookup[s.name.toLowerCase()] = { name: s.name, category: s.category, description: s.description };
+                });
+            })
+            .catch(() => {});
+
+        // Match notifications
+        let notificationsEnabled = false;
+        let knownMatchIds = new Set();
+        const notifBtn = document.getElementById('notifBtn');
+
+        notifBtn.addEventListener('click', async () => {
+            if (!('Notification' in window)) return;
+            if (notificationsEnabled) {
+                notificationsEnabled = false;
+                notifBtn.classList.remove('active');
+                localStorage.removeItem('matchNotifs');
+                return;
+            }
+            const perm = await Notification.requestPermission();
+            if (perm === 'granted') {
+                notificationsEnabled = true;
+                notifBtn.classList.add('active');
+                localStorage.setItem('matchNotifs', 'true');
+            }
+        });
+
+        if (localStorage.getItem('matchNotifs') === 'true' && Notification.permission === 'granted') {
+            notificationsEnabled = true;
+            notifBtn.classList.add('active');
+        }
+
         // Schedule
         const matchList = document.getElementById('matchList');
+        const removedList = document.getElementById('removedList');
+        const removedToggleRow = document.getElementById('removedToggleRow');
+        const removedToggle = document.getElementById('removedToggle');
         let countdownInterval;
+        let showingRemoved = false;
 
         function formatTeams(teams, size) {
             if (teams === 'ffa' || !size) return 'FFA';
@@ -823,6 +978,46 @@
                    d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
         }
 
+        function renderMatchCard(m, isRemoved) {
+            const scenarios = m.scenarios.map(s =>
+                '<span class="match-scenario-tag">' + s + '</span>'
+            ).join('');
+
+            let html = '<div class="match-card' + (isRemoved ? ' removed' : '') + '">' +
+                '<div class="match-top">' +
+                    '<div>' +
+                        '<div class="match-date">' + formatDateTime(m.opens) + '</div>' +
+                        (isRemoved ? '' : '<div class="match-countdown" data-opens="' + m.opens + '">' + formatCountdown(m.opens) + '</div>') +
+                    '</div>' +
+                    '<div class="match-badges">' +
+                        '<span class="match-badge badge-host">' + m.author + '</span>' +
+                        '<span class="match-badge badge-teams">' + formatTeams(m.teams, m.size) + '</span>' +
+                        '<span class="match-badge badge-region">' + m.region + '</span>' +
+                        (isRemoved ? '' : '<button class="match-share-btn" onclick="shareMatch(this)" data-date="' + m.opens + '" data-host="' + m.author + '" data-teams="' + formatTeams(m.teams, m.size) + '" data-scenarios="' + m.scenarios.join(', ') + '" data-region="' + m.region + '"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share</button>') +
+                    '</div>' +
+                '</div>' +
+                '<div class="match-scenarios">' + scenarios + '</div>' +
+                '<div class="match-details">' +
+                    '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>' + m.slots + ' slots</div>' +
+                    '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>' + m.mapSize + 'x' + m.mapSize + '</div>' +
+                    '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + m.length + 'min</div>' +
+                    '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 7.5l3.5-3.5h3v3L16 10.5"/></svg>PvP ' + m.pvpEnabledAt + 'min</div>' +
+                    '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>' + m.version + '</div>' +
+                '</div>';
+
+            if (isRemoved) {
+                const reason = m.removedReason || 'No reason provided';
+                const removedBy = m.removedBy || m.author;
+                html += '<div class="match-removed-reason">' +
+                    '<span>Removed by ' + removedBy + '</span>' +
+                    reason +
+                '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
         function renderMatches(matches) {
             if (matches.length === 0) {
                 matchList.innerHTML = '<div class="match-empty">' +
@@ -834,33 +1029,30 @@
                 return;
             }
 
-            matchList.innerHTML = matches.map(m => {
-                const scenarios = m.scenarios.map(s =>
-                    '<span class="match-scenario-tag">' + s + '</span>'
-                ).join('');
+            matchList.innerHTML = matches.map(m => renderMatchCard(m, false)).join('');
+        }
 
-                return '<div class="match-card">' +
-                    '<div class="match-top">' +
-                        '<div class="match-time-block">' +
-                            '<div class="match-date">' + formatDateTime(m.opens) + '</div>' +
-                            '<div class="match-countdown" data-opens="' + m.opens + '">' + formatCountdown(m.opens) + '</div>' +
-                        '</div>' +
-                        '<div class="match-badges">' +
-                            '<span class="match-badge badge-host">' + m.author + '</span>' +
-                            '<span class="match-badge badge-teams">' + formatTeams(m.teams, m.size) + '</span>' +
-                            '<span class="match-badge badge-region">' + m.region + '</span>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="match-scenarios">' + scenarios + '</div>' +
-                    '<div class="match-details">' +
-                        '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>' + m.slots + ' slots</div>' +
-                        '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>' + m.mapSize + 'x' + m.mapSize + '</div>' +
-                        '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + m.length + 'min</div>' +
-                        '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 7.5l3.5-3.5h3v3L16 10.5"/></svg>PvP ' + m.pvpEnabledAt + 'min</div>' +
-                        '<div class="match-detail"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>' + m.version + '</div>' +
-                    '</div>' +
-                '</div>';
-            }).join('');
+        function renderRemovedMatches(removed) {
+            if (removed.length === 0) {
+                removedToggleRow.style.display = 'none';
+                removedList.innerHTML = '';
+                return;
+            }
+
+            removedToggleRow.style.display = 'flex';
+            removedToggle.textContent = showingRemoved
+                ? 'Hide Removed (' + removed.length + ')'
+                : 'Show Removed (' + removed.length + ')';
+            removedList.innerHTML = removed.map(m => renderMatchCard(m, true)).join('');
+        }
+
+        function toggleRemoved() {
+            showingRemoved = !showingRemoved;
+            removedToggle.classList.toggle('active', showingRemoved);
+            removedList.classList.toggle('show', showingRemoved);
+            removedToggle.textContent = showingRemoved
+                ? 'Hide Removed (' + removedList.children.length + ')'
+                : 'Show Removed (' + removedList.children.length + ')';
         }
 
         function updateCountdowns() {
@@ -876,10 +1068,40 @@
                     return res.json();
                 })
                 .then(data => {
-                    const alliance = data
-                        .filter(m => m.tags && m.tags.includes('Alliance') && !m.removed)
-                        .sort((a, b) => new Date(a.opens) - new Date(b.opens));
-                    renderMatches(alliance);
+                    const allAlliance = data.filter(m => m.tags && m.tags.includes('Alliance'));
+                    const active = allAlliance.filter(m => !m.removed).sort((a, b) => new Date(a.opens) - new Date(b.opens));
+                    const removed = allAlliance.filter(m => m.removed).sort((a, b) => new Date(b.removedAt || b.opens) - new Date(a.removedAt || a.opens));
+
+                    // Notify on new matches
+                    if (notificationsEnabled && knownMatchIds.size > 0) {
+                        active.forEach(m => {
+                            if (!knownMatchIds.has(m.id)) {
+                                new Notification('New Alliance Match!', {
+                                    body: formatDateTime(m.opens) + ' — ' + m.scenarios.join(', '),
+                                    icon: 'logo.png'
+                                });
+                            }
+                        });
+                    }
+                    knownMatchIds = new Set(active.map(m => m.id));
+
+                    // Countdown banner for imminent matches
+                    if (!bannerDismissed && active.length > 0) {
+                        const soonest = active[0];
+                        const diff = new Date(soonest.opens) - new Date();
+                        if (diff > 0 && diff <= 3600000) {
+                            bannerMatchOpens = soonest.opens;
+                            bannerText.innerHTML = '<strong>' + soonest.author + '</strong> match opening in';
+                            updateBanner();
+                            countdownBanner.classList.add('visible');
+                        } else {
+                            countdownBanner.classList.remove('visible');
+                            bannerMatchOpens = null;
+                        }
+                    }
+
+                    renderMatches(active);
+                    renderRemovedMatches(removed);
                 })
                 .catch(() => {
                     matchList.innerHTML = '<div class="match-empty">' +
@@ -891,6 +1113,111 @@
         fetchMatches();
         setInterval(fetchMatches, 60000);
         countdownInterval = setInterval(updateCountdowns, 1000);
+
+        // Scenario tooltips
+        const tooltip = document.getElementById('scenarioTooltip');
+        const tooltipName = document.getElementById('tooltipName');
+        const tooltipTag = document.getElementById('tooltipTag');
+        const tooltipDesc = document.getElementById('tooltipDesc');
+        const tagClassMap = { pvp:'tag-pvp', mining:'tag-mining', survival:'tag-survival', teams:'tag-teams', movement:'tag-movement', loot:'tag-loot', world:'tag-world', mobs:'tag-mobs', misc:'tag-misc' };
+
+        function showTooltip(tag) {
+            const name = tag.textContent.trim();
+            const scenario = scenarioLookup[name.toLowerCase()];
+            if (!scenario) return;
+            tooltipName.textContent = scenario.name;
+            const catLower = scenario.category.toLowerCase();
+            tooltipTag.textContent = scenario.category;
+            tooltipTag.className = 'scenario-tooltip-tag ' + (tagClassMap[catLower] || 'tag-misc');
+            tooltipDesc.textContent = scenario.description;
+            const rect = tag.getBoundingClientRect();
+            tooltip.style.left = Math.max(8, Math.min(rect.left, window.innerWidth - 316)) + 'px';
+            tooltip.style.top = (rect.top - 8) + 'px';
+            tooltip.classList.add('visible');
+            // Reposition after render to get actual height
+            requestAnimationFrame(() => {
+                const th = tooltip.offsetHeight;
+                let top = rect.top - th - 8;
+                if (top < 0) top = rect.bottom + 8;
+                tooltip.style.top = top + 'px';
+            });
+        }
+
+        document.addEventListener('mouseover', function(e) {
+            const tag = e.target.closest('.match-scenario-tag');
+            if (tag) showTooltip(tag);
+        });
+        document.addEventListener('mouseout', function(e) {
+            if (e.target.closest('.match-scenario-tag')) tooltip.classList.remove('visible');
+        });
+        document.addEventListener('touchstart', function(e) {
+            const tag = e.target.closest('.match-scenario-tag');
+            if (!tag) { tooltip.classList.remove('visible'); return; }
+            showTooltip(tag);
+        });
+
+        // Discord member count
+        fetch('https://discord.com/api/v10/invites/f6bjjwgHy4?with_counts=true')
+            .then(r => r.json())
+            .then(data => {
+                const count = data.approximate_member_count;
+                const el = document.getElementById('discordMemberCount');
+                if (count && el) {
+                    el.innerHTML = '<span class="discord-count">' + count + ' members</span> — ';
+                }
+            })
+            .catch(() => {});
+
+        // Share match
+        function shareMatch(btn) {
+            const date = formatDateTime(btn.dataset.date);
+            const text = '🔥 Alliance UHC Match\n' +
+                '📅 ' + date + '\n' +
+                '👤 Host: ' + btn.dataset.host + '\n' +
+                '👥 ' + btn.dataset.teams + ' | ' + btn.dataset.region + '\n' +
+                '🎮 ' + btn.dataset.scenarios + '\n' +
+                '🔗 na.allianceuhc.space';
+            navigator.clipboard.writeText(text).then(() => {
+                const t = document.getElementById('toast');
+                t.textContent = '✓ Match details copied';
+                t.classList.add('show');
+                setTimeout(() => {
+                    t.classList.remove('show');
+                    setTimeout(() => { t.innerHTML = '&#10003; Copied to clipboard'; }, 400);
+                }, 2200);
+            });
+        }
+
+        // Countdown banner
+        const countdownBanner = document.getElementById('countdownBanner');
+        const bannerText = document.getElementById('bannerText');
+        const bannerTime = document.getElementById('bannerTime');
+        let bannerDismissed = false;
+        let bannerMatchOpens = null;
+
+        document.getElementById('bannerDismiss').addEventListener('click', () => {
+            bannerDismissed = true;
+            countdownBanner.classList.remove('visible');
+        });
+
+        function updateBanner() {
+            if (bannerDismissed || !bannerMatchOpens) return;
+            const diff = new Date(bannerMatchOpens) - new Date();
+            if (diff <= 0) {
+                bannerTime.textContent = 'Opening now!';
+                return;
+            }
+            const mins = Math.floor(diff / 60000);
+            const secs = Math.floor((diff % 60000) / 1000);
+            bannerTime.textContent = mins + 'm ' + secs + 's';
+        }
+
+        setInterval(updateBanner, 1000);
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
     </script>
 </body>
 </html>
