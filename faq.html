@@ -116,8 +116,18 @@
         }
 
         .faq-item.open .faq-answer {
-            max-height: 300px;
+            max-height: 600px;
             padding: 0 1.25rem 1rem;
+        }
+
+        .faq-section-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--fire-orange);
+            margin-bottom: 0.6rem;
+            padding-top: 0.5rem;
         }
 
         .faq-answer p {
@@ -142,6 +152,32 @@
             transition: opacity 0.3s;
         }
         .faq-answer a:hover { opacity: 0.8; }
+
+        .platform-group { margin-top: 0.75rem; }
+        .platform-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--fire-orange);
+            margin-bottom: 0.4rem;
+        }
+        .platform-icons {
+            display: flex;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .platform-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+        .platform-icon svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+        .platform-icon span { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; }
+        .platform-icon:hover { color: var(--text-primary); }
 
         footer { border-top: 1px solid var(--dark-border); padding: 2rem; }
         .footer-inner { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
@@ -180,13 +216,116 @@
     </div>
 
     <div class="faq-grid">
+        <div class="faq-section-label">// How to Play</div>
+
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                <span>What is UHC?</span>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+                <p>Ultra Hardcore — natural health regeneration is disabled. The only way to heal is golden apples, golden heads, or potions. Every heart counts and death is permanent.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                <span>How does a match work?</span>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+                <p>You're scattered randomly into the world. Mine resources, craft gear, and prepare during the grace period. When PvP enables, fight to survive. Eventually the border shrinks and all remaining players meet at 0,0 for a final battle.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                <span>How do I heal?</span>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+                <p>Craft golden apples (8 gold ingots + apple) or golden heads (8 gold ingots + player head dropped on death). Potions can also heal if the nether is enabled. Check the match post for heal amounts.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                <span>What are golden heads?</span>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+                <p>When a player dies they drop their head. Surround it with 8 gold ingots to craft a golden head. Eating it heals you (usually 4 hearts). Check <code>/feature</code> or the match post for the exact heal amount.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                <span>What happens at meetup?</span>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+                <p>The border shrinks to 0,0 and all players must fight. You cannot dig down or avoid combat. Blocks may decay after being placed. Last player or team standing wins.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                <span>What are the game phases?</span>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+                <p><strong>Grace Period</strong> — no PvP, gather resources. <strong>PvP</strong> — combat is enabled, fight or avoid others. <strong>Border Shrink</strong> — the border closes in. <strong>Meetup</strong> — everyone fights at 0,0.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                <span>How do I check the config?</span>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+                <p>Use <code>/feature</code> in-game to see all config options for the current match, or check the match post. You can also browse all possible settings on the <a href="config.html">Config page</a>.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                <span>What are useful commands?</span>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer">
+                <p><code>/feature</code> — view game config. <code>/h</code> — check your health (if enabled). <code>/report &lt;player&gt;</code> — report a rule breaker. <code>/helpop &lt;message&gt;</code> — ask staff for help. <code>/matchpost</code> — view the match post.</p>
+            </div>
+        </div>
+
+        <div class="faq-section-label" style="padding-top: 1.5rem;">// General</div>
+
         <div class="faq-item">
             <button class="faq-question" aria-expanded="false">
                 <span>How do I join?</span>
                 <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="faq-answer">
-                <p>Connect to <code>na.allianceuhc.space</code> on Minecraft version 1.8.x. Check the <a href="https://discord.allianceuhc.space" target="_blank">Discord</a> for match announcements and open times.</p>
+                <p>Connect to <code>na.allianceuhc.space</code>. For the best experience, use Minecraft <strong>1.8</strong> on Java Edition, but you can join on any version from 1.8 upwards. Bedrock clients should join on the latest version. The server supports crossplay between Java and Bedrock editions. Check the <a href="https://discord.allianceuhc.space" target="_blank">Discord</a> for match announcements and open times.</p>
+                <div class="platform-group">
+                    <div class="platform-label">Java Edition</div>
+                    <div class="platform-icons">
+                        <div class="platform-icon"><svg viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg><span>Windows</span></div>
+                        <div class="platform-icon"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg><span>macOS</span></div>
+                        <div class="platform-icon"><svg viewBox="0 0 24 24"><path d="M12.504 0c-.155 0-.311.002-.465.014-.653.034-1.29.2-1.88.492a4.151 4.151 0 0 0-1.426 1.11c-.467.545-.79 1.202-.937 1.899-.168.79-.144 1.588.068 2.382.218.815.617 1.577 1.178 2.227.56.651 1.263 1.15 2.045 1.458.236.092.478.164.725.213a4.561 4.561 0 0 0 1.47.048c.473-.065.936-.216 1.348-.45a3.78 3.78 0 0 0 1.082-.894c.37-.449.632-.967.775-1.522.152-.593.168-1.2.062-1.797a4.396 4.396 0 0 0-.68-1.713 4.59 4.59 0 0 0-1.346-1.298A4.263 4.263 0 0 0 12.504 0zm-.005 1.603c.39.006.768.104 1.106.283.34.182.635.44.87.753.24.32.41.688.49 1.076.087.404.073.813-.033 1.211a2.98 2.98 0 0 1-.537 1.05 2.612 2.612 0 0 1-.795.666 2.083 2.083 0 0 1-.963.28 2.587 2.587 0 0 1-1.028-.105 2.932 2.932 0 0 1-1.36-.968 3.382 3.382 0 0 1-.697-1.39 3.32 3.32 0 0 1-.015-1.5c.108-.476.32-.913.617-1.286.296-.373.67-.676 1.098-.882a2.324 2.324 0 0 1 1.247-.188zM7.31 7.93c-.353.013-.7.092-1.023.243a2.723 2.723 0 0 0-.87.663c-.285.312-.49.682-.604 1.085a2.747 2.747 0 0 0-.052 1.254c.073.42.241.816.49 1.157.251.344.581.625.96.82.372.19.782.291 1.196.293.414.003.826-.094 1.2-.279.377-.188.708-.463.971-.807.262-.344.443-.74.533-1.161.09-.42.083-.854-.018-1.273a2.835 2.835 0 0 0-.548-1.117 2.715 2.715 0 0 0-.944-.756 2.414 2.414 0 0 0-1.29-.322zm9.38 0a2.414 2.414 0 0 0-1.291.322 2.715 2.715 0 0 0-.944.756 2.835 2.835 0 0 0-.548 1.117c-.1.42-.108.854-.018 1.273.09.42.271.817.533 1.161.263.344.594.62.97.807.375.185.787.282 1.201.28.414-.003.824-.104 1.196-.294.379-.195.709-.476.96-.82.249-.341.417-.737.49-1.157a2.747 2.747 0 0 0-.052-1.254 2.556 2.556 0 0 0-.604-1.085 2.723 2.723 0 0 0-.87-.663A2.414 2.414 0 0 0 16.69 7.93zM12 11.14c-.534.006-1.055.183-1.485.506-.43.323-.749.776-.912 1.295-.163.518-.163 1.075-.002 1.594.162.52.48.974.911 1.298.43.325.951.504 1.486.511.535.006 1.06-.162 1.496-.48.436-.32.761-.77.93-1.286.17-.516.178-1.074.023-1.595-.155-.521-.467-.98-.893-1.31a2.164 2.164 0 0 0-1.554-.533zm-5.99 2.093c-.24.006-.476.074-.687.199a1.463 1.463 0 0 0-.517.52 1.628 1.628 0 0 0-.222.695 1.727 1.727 0 0 0 .082.733c.083.236.222.447.405.615.183.168.405.29.647.355.242.065.497.07.743.015.245-.055.47-.168.656-.33.186-.161.325-.369.406-.604.08-.235.1-.487.055-.731a1.561 1.561 0 0 0-.299-.664 1.465 1.465 0 0 0-.565-.447 1.345 1.345 0 0 0-.704-.156zm11.98 0c-.24.006-.476.074-.687.199a1.463 1.463 0 0 0-.517.52 1.628 1.628 0 0 0-.222.695 1.727 1.727 0 0 0 .082.733c.083.236.222.447.405.615.183.168.405.29.647.355.242.065.497.07.743.015.245-.055.47-.168.656-.33.186-.161.325-.369.406-.604.08-.235.1-.487.055-.731a1.561 1.561 0 0 0-.299-.664 1.465 1.465 0 0 0-.565-.447 1.345 1.345 0 0 0-.704-.156zM12 16.276c-.322.003-.638.084-.92.236a1.95 1.95 0 0 0-.707.634 2.108 2.108 0 0 0-.357.876 2.235 2.235 0 0 0 .03.96c.076.316.22.61.42.86.2.252.453.453.74.59.288.139.604.21.923.21s.636-.07.924-.209c.287-.138.54-.339.74-.59.2-.252.344-.545.42-.862.076-.316.08-.643.03-.96a2.108 2.108 0 0 0-.358-.875 1.95 1.95 0 0 0-.707-.634 1.771 1.771 0 0 0-.92-.236h-.058zm-3.928 2.339a1.04 1.04 0 0 0-.473.124c-.15.08-.279.197-.378.34a1.159 1.159 0 0 0-.196.472 1.25 1.25 0 0 0 .012.514c.04.17.12.326.234.457.113.13.258.232.42.297.163.065.338.09.512.072a1.04 1.04 0 0 0 .483-.178c.143-.104.257-.242.332-.403a1.154 1.154 0 0 0 .12-.503 1.199 1.199 0 0 0-.105-.497 1.102 1.102 0 0 0-.331-.39 1.034 1.034 0 0 0-.63-.305zm7.856 0a1.034 1.034 0 0 0-.63.304 1.102 1.102 0 0 0-.331.39 1.199 1.199 0 0 0-.105.498c.001.175.044.348.12.503.075.161.189.3.332.403.143.104.309.165.483.179.174.017.35-.008.512-.073.162-.065.307-.167.42-.297.114-.13.194-.287.234-.457a1.25 1.25 0 0 0 .012-.514 1.159 1.159 0 0 0-.196-.472 1.04 1.04 0 0 0-.851-.464zm-3.928 2.2c-.157.003-.31.053-.443.144-.134.092-.24.22-.306.371a.946.946 0 0 0-.078.479.976.976 0 0 0 .168.453c.091.128.218.226.365.28.147.056.306.066.459.03a.838.838 0 0 0 .404-.24.928.928 0 0 0 .225-.41.967.967 0 0 0 .013-.484.94.94 0 0 0-.236-.418.835.835 0 0 0-.571-.205z"/></svg><span>Linux</span></div>
+                    </div>
+                </div>
+                <div class="platform-group" style="margin-top: 0.5rem;">
+                    <div class="platform-label">Bedrock Edition</div>
+                    <div class="platform-icons">
+                        <div class="platform-icon"><svg viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg><span>Windows</span></div>
+                        <div class="platform-icon"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg><span>iOS</span></div>
+                        <div class="platform-icon"><svg viewBox="0 0 24 24"><path d="M17.523 15.341a.6.6 0 0 0-.022-.653c-.44-.665-.866-1.338-1.313-1.998a.547.547 0 0 0-.275-.222c-.603-.2-1.21-.384-1.816-.572l-.052-.019c.177-.592.353-1.18.525-1.77a.38.38 0 0 1 .213-.232c.558-.25 1.12-.49 1.682-.73l.156-.066a.6.6 0 0 0 .066-.653c-.449-.875-.888-1.756-1.347-2.627a.557.557 0 0 0-.347-.29C14.404 5.36 13.82 5.201 13.232 5.055a.33.33 0 0 1-.218-.146c-.325-.544-.659-1.082-.983-1.627a.598.598 0 0 0-.546-.322c-.924.008-1.848.008-2.772 0a.598.598 0 0 0-.546.322c-.324.545-.658 1.083-.983 1.627a.33.33 0 0 1-.218.146c-.588.146-1.172.305-1.761.453a.557.557 0 0 0-.347.29C4.4 6.677 3.961 7.558 3.512 8.433a.6.6 0 0 0 .066.653l.156.066c.562.24 1.124.48 1.682.73a.38.38 0 0 1 .213.232c.172.59.348 1.178.525 1.77l-.052.019c-.606.188-1.213.372-1.816.572a.547.547 0 0 0-.275.222c-.447.66-.873 1.333-1.313 1.998a.6.6 0 0 0-.022.653c.422.889.851 1.775 1.288 2.656a.59.59 0 0 0 .388.321c.568.126 1.14.236 1.712.342a.366.366 0 0 1 .248.173c.32.549.648 1.093.972 1.64a.6.6 0 0 0 .529.335c.924-.003 1.848-.003 2.772 0a.6.6 0 0 0 .529-.335c.324-.547.652-1.091.972-1.64a.366.366 0 0 1 .248-.173c.572-.106 1.144-.216 1.712-.342a.59.59 0 0 0 .388-.321c.437-.881.866-1.767 1.288-2.656zM12 15.002a3.002 3.002 0 1 1 0-6.004 3.002 3.002 0 0 1 0 6.004z"/></svg><span>Android</span></div>
+                        <div class="platform-icon"><svg viewBox="0 0 24 24"><path d="M4.102 21.033A3.067 3.067 0 0 1 1.049 18c0-.854.348-1.628.908-2.185l.028-.028c.203-.2.428-.373.67-.516V7.729c-.242-.143-.467-.316-.67-.516l-.028-.028A3.065 3.065 0 0 1 1.049 5a3.067 3.067 0 0 1 3.053-3.033A3.067 3.067 0 0 1 7.155 5c0 .854-.348 1.629-.908 2.185l-.028.028c-.115.113-.238.214-.368.3v8.974c.13.086.253.187.368.3l.028.028c.56.556.908 1.33.908 2.185a3.067 3.067 0 0 1-3.053 3.033zm15.796 0A3.067 3.067 0 0 1 16.845 18c0-.854.348-1.628.908-2.185l.028-.028c.203-.2.428-.373.67-.516V7.729c-.242-.143-.467-.316-.67-.516l-.028-.028A3.065 3.065 0 0 1 16.845 5a3.067 3.067 0 0 1 3.053-3.033A3.067 3.067 0 0 1 22.951 5c0 .854-.348 1.629-.908 2.185l-.028.028c-.115.113-.238.214-.368.3v8.974c.13.086.253.187.368.3l.028.028c.56.556.908 1.33.908 2.185a3.067 3.067 0 0 1-3.053 3.033zM12 21.033A3.067 3.067 0 0 1 8.947 18c0-1.694 1.368-3.033 3.053-3.033 1.685 0 3.053 1.34 3.053 3.033a3.067 3.067 0 0 1-3.053 3.033zM12 9.033A3.067 3.067 0 0 1 8.947 6c0-1.694 1.368-3.033 3.053-3.033 1.685 0 3.053 1.34 3.053 3.033A3.067 3.067 0 0 1 12 9.033z"/></svg><span>Xbox</span></div>
+                        <div class="platform-icon"><svg viewBox="0 0 24 24"><path d="M8.985 2.596v.012c-.789.12-1.476.397-2.2.815-.667.384-1.2.79-1.768 1.345-.585.572-1.05 1.14-1.453 1.826-.407.684-.728 1.436-.908 2.241-.127.564-.213 1.254-.24 1.871-.017.416-.043 7.544-.03 8.416.01.653.043 1.296.127 1.72.147.742.48 1.462.984 2.07.58.702 1.404 1.27 2.253 1.47.298.07.525.1.893.1h10.7c.359 0 .594-.03.888-.098.855-.2 1.676-.77 2.26-1.474.502-.607.837-1.327.985-2.072.083-.422.116-1.065.127-1.718.013-.872-.013-8-.03-8.416-.027-.617-.113-1.307-.24-1.871-.18-.805-.5-1.557-.908-2.241-.403-.685-.868-1.254-1.453-1.826-.568-.556-1.1-.961-1.768-1.345-.724-.418-1.41-.694-2.2-.815v-.012h-.005C14.685 2.505 12 2.435 12 2.435s-2.685.07-3.01.161h-.005zm3.011 1.52c1.652 0 3.252.578 4.508 1.63 1.327 1.11 2.148 2.626 2.392 4.343.08.558.127 1.27.137 2.22.01.953-.003 7.087-.023 7.637-.043 1.217-.27 2.077-.77 2.858-.593.924-1.47 1.414-2.57 1.437-.402.008-12.012.008-12.414 0-1.1-.023-1.977-.513-2.57-1.437-.5-.781-.727-1.64-.77-2.858-.02-.55-.033-6.684-.023-7.637.01-.95.057-1.662.137-2.22.244-1.717 1.065-3.233 2.392-4.343 1.256-1.052 2.856-1.63 4.508-1.63h3.066zm-3.066.746c-1.43 0-2.818.5-3.9 1.405-1.146.96-1.855 2.266-2.068 3.756-.07.492-.11 1.138-.12 2.002-.008.843.003 6.85.02 7.378.037 1.017.224 1.737.627 2.367.434.677 1.078 1.038 1.884 1.059.388.008 11.624.008 12.012 0 .806-.02 1.45-.382 1.884-1.06.403-.629.59-1.349.627-2.366.017-.528.028-6.535.02-7.378-.01-.864-.05-1.51-.12-2.002-.213-1.49-.922-2.796-2.068-3.756-1.082-.905-2.47-1.405-3.9-1.405H8.93z"/></svg><span>PlayStation</span></div>
+                        <div class="platform-icon"><svg viewBox="0 0 24 24"><path d="M14.176 24h-4.352c-.476 0-.863-.392-.863-.875V13.293H2.674c-.476 0-.863-.393-.863-.876v-4.42c0-.483.387-.876.863-.876h6.287V.875c0-.483.387-.875.863-.875h4.352c.476 0 .863.392.863.875v6.246h6.287c.476 0 .863.393.863.876v4.42c0 .483-.387.876-.863.876h-6.287v9.832c0 .483-.387.875-.863.875z"/></svg><span>Switch</span></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -206,7 +345,7 @@
                 <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="faq-answer">
-                <p>Minecraft <strong>1.8.x</strong> for the best experience. The server uses 1.8 combat mechanics.</p>
+                <p>Minecraft <strong>1.8</strong> Java Edition for the best experience, but you can join on any version from 1.8 upwards. Bedrock clients should join on the latest version. The server uses 1.8 combat mechanics.</p>
             </div>
         </div>
 
