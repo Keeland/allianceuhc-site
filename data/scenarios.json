@@ -1,5 +1,10 @@
 [
   {
+    "name": "All In",
+    "description": "Right-click gold ingots for absorption hearts. Every 4th use gives Slowness 1 for 10 seconds.",
+    "category": "Loot"
+  },
+  {
     "name": "Alone Together",
     "description": "You cannot see your teammates. You can't melee damage your teammates but you can still hit them with projectiles.",
     "category": "Teams"
@@ -30,9 +35,19 @@
     "category": "Survival"
   },
   {
+    "name": "Beta Zombies",
+    "description": "Zombies drop feathers instead of their normal drops.",
+    "category": "Mobs"
+  },
+  {
     "name": "Bigcrack",
     "description": "There is a wide crack through the x-axis of the map.",
     "category": "World"
+  },
+  {
+    "name": "Bingo Captains",
+    "description": "Race to complete bingo card rows to become a team captain who drafts other players.",
+    "category": "Teams"
   },
   {
     "name": "Blast Mining",
@@ -55,6 +70,21 @@
     "category": "Mining"
   },
   {
+    "name": "Blood Enchants",
+    "description": "Enchanting an item costs you half a heart of damage.",
+    "category": "Mining"
+  },
+  {
+    "name": "Blood Lapis",
+    "description": "Mining lapis lazuli costs you half a heart of damage.",
+    "category": "Mining"
+  },
+  {
+    "name": "Bounty Hunter",
+    "description": "Players are assigned tiers with bounties. Use your compass to track your target for tier-based rewards.",
+    "category": "Misc"
+  },
+  {
     "name": "Bowfighters",
     "description": "Everyone is given 1 arrow, 2 string and an Infinity book. The highest tier of melee weapon you can get is wood sword/stone axe.",
     "category": "Pvp"
@@ -70,8 +100,18 @@
     "category": "Movement"
   },
   {
+    "name": "Cannibalism",
+    "description": "Right-click player heads to permanently gain an extra half heart of max health.",
+    "category": "Survival"
+  },
+  {
     "name": "Children Left Unattended",
     "description": "When your teammate dies, the remaining player receives Speed 2 (30s) and a tamed wolf.",
+    "category": "Teams"
+  },
+  {
+    "name": "Consolidation",
+    "description": "Every 4 minutes, the lowest-health teammate heals. 1 heart if 3+ alive, half a heart if 2 alive.",
     "category": "Teams"
   },
   {
@@ -100,14 +140,19 @@
     "category": "Mining"
   },
   {
+    "name": "Dependency",
+    "description": "You cannot craft a crafting table. The only way to access one is to right click one of your teammates.",
+    "category": "Teams"
+  },
+  {
     "name": "Depths",
     "description": "As you go farther down the Y level, mobs will deal more damage.",
     "category": "Mobs"
   },
   {
-    "name": "Dependency",
-    "description": "You cannot craft a crafting table. The only way to access one is to right click one of your teammates.",
-    "category": "Teams"
+    "name": "DiamondLess",
+    "description": "Diamonds do not drop from ore. Instead players drop 1 diamond on death.",
+    "category": "Mining"
   },
   {
     "name": "Dolphins",
@@ -115,9 +160,44 @@
     "category": "Movement"
   },
   {
-    "name": "DiamondLess",
-    "description": "Diamonds do not drop from ore. Instead players drop 1 diamond on death.",
-    "category": "Mining"
+    "name": "Double Jump",
+    "description": "All players can double jump with a 2-second cooldown.",
+    "category": "Movement"
+  },
+  {
+    "name": "Echo",
+    "description": "You take 50% reduced damage, but the full amount is repeated 10 seconds later.",
+    "category": "Pvp"
+  },
+  {
+    "name": "Eggs",
+    "description": "Thrown eggs spawn random animals on impact. Chickens have a chance to drop eggs.",
+    "category": "Misc"
+  },
+  {
+    "name": "Eight Legged Freaks",
+    "description": "Spiders are enhanced with special abilities and increased danger.",
+    "category": "Mobs"
+  },
+  {
+    "name": "Ender Dragon Rush",
+    "description": "Race to the End. Only 3 ender eyes are needed to activate the portal.",
+    "category": "Survival"
+  },
+  {
+    "name": "Fast Getaway",
+    "description": "Killing a player grants you Speed 2 for 30 seconds.",
+    "category": "Pvp"
+  },
+  {
+    "name": "Game Changer",
+    "description": "Crafting tables, enchantment tables, anvils, and buckets are restricted. Use /craft to access crafting.",
+    "category": "Survival"
+  },
+  {
+    "name": "Gapple Roulette",
+    "description": "Eating a golden apple applies a random potion effect instead of regeneration.",
+    "category": "Survival"
   },
   {
     "name": "Go To Hell",
@@ -135,9 +215,24 @@
     "category": "Loot"
   },
   {
+    "name": "Gone Fishing",
+    "description": "All players receive overpowered fishing rods and anvils at game start.",
+    "category": "Survival"
+  },
+  {
     "name": "Grave Robbers",
     "description": "When a player is killed, a gravestone spawns with their name on it. You must dig up the grave to get the player's loot.",
     "category": "Loot"
+  },
+  {
+    "name": "H2O",
+    "description": "Drinking a potion while on fire automatically extinguishes you.",
+    "category": "Survival"
+  },
+  {
+    "name": "HasteyBabies",
+    "description": "All tools are equipped with Efficiency 1.",
+    "category": "Mining"
   },
   {
     "name": "HasteyBoys",
@@ -145,9 +240,14 @@
     "category": "Mining"
   },
   {
-    "name": "HasteyBabies",
-    "description": "All tools are equipped with Efficiency 1.",
-    "category": "Mining"
+    "name": "Homing Arrows",
+    "description": "Arrows home toward the player you're looking at.",
+    "category": "Pvp"
+  },
+  {
+    "name": "Hypixel Heads",
+    "description": "Golden heads are crafted using the Hypixel recipe format.",
+    "category": "Loot"
   },
   {
     "name": "Infestation",
@@ -160,6 +260,11 @@
     "category": "Teams"
   },
   {
+    "name": "Inverted Slimy Chunks",
+    "description": "7% of chunks are vertically flipped with a slime block layer at the bottom.",
+    "category": "World"
+  },
+  {
     "name": "Investments",
     "description": "You can invest diamonds or gold on a player. If that player gets a kill, you get double back. When they die, they drop your invested amount. Use /invest.",
     "category": "Pvp"
@@ -170,9 +275,24 @@
     "category": "Misc"
   },
   {
+    "name": "Market",
+    "description": "Teams are formed through a slave market auction drafting system.",
+    "category": "Teams"
+  },
+  {
+    "name": "Melee Fun",
+    "description": "Melee damage is reduced to 25% with minimal invulnerability frames.",
+    "category": "Pvp"
+  },
+  {
     "name": "Midas",
     "description": "You get gold based on how many times you hit a player before killing them.",
     "category": "Pvp"
+  },
+  {
+    "name": "Moles",
+    "description": "One player per team is secretly a mole working with other moles against their own team.",
+    "category": "Teams"
   },
   {
     "name": "Monsters Inc",
@@ -245,9 +365,24 @@
     "category": "Survival"
   },
   {
+    "name": "Quad Anvils 2",
+    "description": "Anvils spawn at map quadrant boundaries and cannot be crafted.",
+    "category": "World"
+  },
+  {
     "name": "Radar",
     "description": "Clicking a clock shows the name, distance and health of players within 120 blocks. Usable once per 5 seconds.",
     "category": "Pvp"
+  },
+  {
+    "name": "Radiant",
+    "description": "Players are assigned unique Valorant-inspired agent classes with special abilities.",
+    "category": "Misc"
+  },
+  {
+    "name": "Reboot",
+    "description": "Dead teammates drop Reboot Cards. Collect and use at 0,0 to respawn them (max 2 per player).",
+    "category": "Lives"
   },
   {
     "name": "Red Arrows",
@@ -255,8 +390,23 @@
     "category": "Pvp"
   },
   {
+    "name": "Redemption",
+    "description": "All players have 2 lives. First death rescatters you with full inventory intact.",
+    "category": "Lives"
+  },
+  {
     "name": "Refill",
     "description": "Players drop extra gold on death. The amount increases the lower the killer's health is. In team games, it's based on the team's average health.",
+    "category": "Loot"
+  },
+  {
+    "name": "Refill 2",
+    "description": "Players who die are automatically removed from their team.",
+    "category": "Teams"
+  },
+  {
+    "name": "Rewarding Longshots",
+    "description": "Long-range arrow kills reward progressively better loot based on distance (up to 5 diamonds at 200+ blocks).",
     "category": "Loot"
   },
   {
@@ -268,6 +418,11 @@
     "name": "Rush",
     "description": "Short game, under 45 minutes. Wooden tools automatically turn into stone tools.",
     "category": "Misc"
+  },
+  {
+    "name": "Rush+",
+    "description": "Ultra-fast progression with automatic tool tier upgrades, Speed and Haste until PvP, and double iron drops.",
+    "category": "Survival"
   },
   {
     "name": "SandBags",
@@ -300,19 +455,24 @@
     "category": "Teams"
   },
   {
+    "name": "Standoff",
+    "description": "Bow damage scales with draw time. Longer draws deal up to 30% bonus damage.",
+    "category": "Pvp"
+  },
+  {
     "name": "Sugar Rush",
     "description": "Right-clicking sugar gives you Speed 2 for 8 seconds.",
     "category": "Movement"
   },
   {
-    "name": "Superheroes",
-    "description": "Each player gains a random power: Speed 2 + Haste 1; Jump 4 + Haste 2 + Saturation 10; Resistance 2 + Fire Resistance; or Health Boost (20 hearts) with extra healing from gapples/heads. Jump Boost power negates fall damage.",
-    "category": "Pvp"
-  },
-  {
     "name": "Superflat Villages",
     "description": "Villages generate much more often, similar to superflat worlds.",
     "category": "World"
+  },
+  {
+    "name": "Superheroes",
+    "description": "Each player gains a random power: Speed 2 + Haste 1; Jump 4 + Haste 2 + Saturation 10; Resistance 2 + Fire Resistance; or Health Boost (20 hearts) with extra healing from gapples/heads. Jump Boost power negates fall damage.",
+    "category": "Pvp"
   },
   {
     "name": "Switcheroo",
@@ -348,6 +508,16 @@
     "name": "Unstable Mining",
     "description": "When mining under Y40 there are chances of methane explosions, floods and unstable cave ceilings.",
     "category": "Mining"
+  },
+  {
+    "name": "Vampirism",
+    "description": "Melee hits heal the attacker for 10% of damage dealt.",
+    "category": "Pvp"
+  },
+  {
+    "name": "Vengeful Spirits",
+    "description": "Dead players spawn hostile mobs holding their heads that must be killed to claim loot.",
+    "category": "Mobs"
   },
   {
     "name": "WebCage",

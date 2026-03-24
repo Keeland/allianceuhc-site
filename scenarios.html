@@ -389,6 +389,89 @@
         .tag-world { background: rgba(33,150,243,0.1); color: #64B5F6; }
         .tag-mobs { background: rgba(244,67,54,0.1); color: #E57373; }
         .tag-misc { background: rgba(158,158,158,0.1); color: #BDBDBD; }
+        .tag-lives { background: rgba(0,230,118,0.12); color: #69F0AE; }
+
+        .active-badge {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255,106,0,0.15);
+            color: var(--fire-orange);
+            white-space: nowrap;
+        }
+
+        .scenario-card.active {
+            border-color: rgba(255,106,0,0.2);
+        }
+
+        .scenario-card.active::before { opacity: 1; }
+
+        /* Currently Enabled Section */
+        .enabled-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem 1.5rem;
+            animation: fadeInUp 0.6s ease 0.05s forwards;
+            opacity: 0;
+        }
+
+        .enabled-inner {
+            background: var(--dark-card);
+            border: 1px solid rgba(255,106,0,0.15);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .enabled-inner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(255,106,0,0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .enabled-header {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .enabled-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--fire-orange);
+            margin-bottom: 0.25rem;
+        }
+
+        .enabled-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+        }
+
+        .enabled-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .enabled-none {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        @media (max-width: 500px) {
+            .enabled-section { padding: 0 1.25rem 1.5rem; }
+            .enabled-grid { grid-template-columns: 1fr; }
+        }
 
         .scenario-desc {
             color: var(--text-muted);
@@ -478,6 +561,16 @@
         <p>Custom rules that change how each match plays. Learn them before you drop in.</p>
     </div>
 
+    <div class="enabled-section" id="enabledSection" style="display:none;">
+        <div class="enabled-inner">
+            <div class="enabled-header">
+                <div class="enabled-label">// Live from server</div>
+                <h2 class="enabled-title">Currently Enabled</h2>
+            </div>
+            <div class="enabled-grid" id="enabledGrid"></div>
+        </div>
+    </div>
+
     <div class="controls">
         <div class="search-bar">
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -493,6 +586,7 @@
             <button class="filter-btn" data-cat="loot">Loot</button>
             <button class="filter-btn" data-cat="world">World</button>
             <button class="filter-btn" data-cat="mobs">Mobs</button>
+            <button class="filter-btn" data-cat="lives">Lives</button>
             <button class="filter-btn" data-cat="misc">Misc</button>
         </div>
         <div class="result-count" id="resultCount"></div>
@@ -525,17 +619,44 @@
     </footer>
 
     <script>
+        const WORKER_URL = 'https://scenarios.keelanmckev.workers.dev/scenarios';
         const grid = document.getElementById('scenarioGrid');
         const searchInput = document.getElementById('search');
         const resultCount = document.getElementById('resultCount');
         const filterBtns = document.querySelectorAll('.filter-btn');
+        const enabledSection = document.getElementById('enabledSection');
+        const enabledGrid = document.getElementById('enabledGrid');
         let activeFilter = 'all';
         let scenarios = [];
 
         const tagLabels = {
             pvp: 'PvP', mining: 'Mining', survival: 'Survival', teams: 'Teams',
-            movement: 'Movement', loot: 'Loot', world: 'World', mobs: 'Mobs', misc: 'Misc'
+            movement: 'Movement', loot: 'Loot', world: 'World', mobs: 'Mobs', lives: 'Lives', misc: 'Misc'
         };
+
+        // Convert PascalCase to spaced name: "AloneTogether" → "Alone Together"
+        function formatName(name) {
+            return name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
+        }
+
+        // Normalize name for matching: strip spaces, lowercase
+        function normalizeKey(name) {
+            return name.replace(/\s+/g, '').toLowerCase();
+        }
+
+        function scenarioCard(s) {
+            return `
+                <div class="scenario-card${s.enabled ? ' active' : ''}">
+                    <div class="scenario-top">
+                        <div class="scenario-name">${s.name}</div>
+                        <div style="display:flex;gap:0.4rem;align-items:center;">
+                            ${s.enabled ? '<span class="active-badge">Active</span>' : ''}
+                            <span class="scenario-tag tag-${s.cat}">${tagLabels[s.cat] || 'Misc'}</span>
+                        </div>
+                    </div>
+                    <div class="scenario-desc">${s.desc}</div>
+                </div>`;
+        }
 
         function renderScenarios() {
             const query = searchInput.value.toLowerCase().trim();
@@ -552,37 +673,56 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map(s => `
-                <div class="scenario-card">
-                    <div class="scenario-top">
-                        <div class="scenario-name">${s.name}</div>
-                        <span class="scenario-tag tag-${s.cat}">${tagLabels[s.cat]}</span>
-                    </div>
-                    <div class="scenario-desc">${s.desc}</div>
-                </div>
-            `).join('');
+            grid.innerHTML = filtered.map(scenarioCard).join('');
         }
 
-        // Fetch scenarios from data/scenarios.json (shared with the Discord bot)
+        function renderEnabled() {
+            const enabled = scenarios.filter(s => s.enabled);
+            if (enabled.length === 0) {
+                enabledSection.style.display = 'none';
+                return;
+            }
+            enabledSection.style.display = '';
+            enabledGrid.innerHTML = enabled.map(scenarioCard).join('');
+        }
+
+        // Fetch from worker + local JSON for categories, fallback to local JSON only
         grid.innerHTML = `<div class="no-results"><h3>Loading scenarios...</h3></div>`;
-        fetch('data/scenarios.json')
-            .then(res => {
-                if (!res.ok) throw new Error('Failed to load');
-                return res.json();
-            })
-            .then(data => {
-                // Map JSON format (name, description, category) to page format (name, desc, cat)
-                scenarios = data.map(s => ({
+
+        Promise.all([
+            fetch(WORKER_URL).then(r => { if (!r.ok) throw new Error('Worker error'); return r.json(); }).catch(() => null),
+            fetch('data/scenarios.json').then(r => { if (!r.ok) throw new Error('JSON error'); return r.json(); }).catch(() => null)
+        ]).then(([workerData, localData]) => {
+            // Build category lookup from local JSON
+            const catLookup = {};
+            if (localData) {
+                localData.forEach(s => { catLookup[normalizeKey(s.name)] = s.category.toLowerCase(); });
+            }
+
+            if (workerData && workerData.length > 0) {
+                // Use worker as primary source, local JSON for categories
+                scenarios = workerData.map(s => ({
+                    name: formatName(s.name),
+                    desc: s.desc,
+                    cat: (s.category ? s.category.toLowerCase() : null) || catLookup[normalizeKey(s.name)] || 'misc',
+                    enabled: !!s.enabled
+                })).sort((a, b) => a.name.localeCompare(b.name));
+                renderEnabled();
+            } else if (localData) {
+                // Fallback: local JSON only, no enabled status
+                scenarios = localData.map(s => ({
                     name: s.name,
                     cat: s.category.toLowerCase(),
-                    desc: s.description
+                    desc: s.description,
+                    enabled: false
                 }));
-                renderScenarios();
-            })
-            .catch(err => {
-                console.error('Error loading scenarios:', err);
+            } else {
                 grid.innerHTML = `<div class="no-results"><h3>Failed to load scenarios</h3><p>Please try refreshing the page.</p></div>`;
-            });
+                return;
+            }
+
+            renderScenarios();
+        });
 
         searchInput.addEventListener('input', renderScenarios);
         filterBtns.forEach(btn => {
@@ -610,15 +750,7 @@
             if (scenarios.length === 0) return;
             const shuffled = [...scenarios].sort(() => Math.random() - 0.5);
             const picks = shuffled.slice(0, Math.min(pickCount, scenarios.length));
-            randomResults.innerHTML = picks.map(s => `
-                <div class="scenario-card">
-                    <div class="scenario-top">
-                        <div class="scenario-name">${s.name}</div>
-                        <span class="scenario-tag tag-${s.cat}">${tagLabels[s.cat]}</span>
-                    </div>
-                    <div class="scenario-desc">${s.desc}</div>
-                </div>
-            `).join('');
+            randomResults.innerHTML = picks.map(scenarioCard).join('');
             randomizeBtn.textContent = 'Re-roll';
         });
     </script>

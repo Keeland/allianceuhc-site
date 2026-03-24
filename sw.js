@@ -1,12 +1,14 @@
-const CACHE_NAME = 'alliance-uhc-v1';
+const CACHE_NAME = 'alliance-uhc-v2';
 const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/scenarios.html',
+    '/schedule.html',
     '/rules.html',
     '/staff.html',
     '/status.html',
     '/faq.html',
+    '/config.html',
     '/news.html',
     '/404.html',
     '/logo.png',
